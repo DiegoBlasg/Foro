@@ -35,7 +35,7 @@ const Menu = () => {
                     </div>
                     {
                         sowPhoneMenu &&
-                        <ul className='sm:flex sm:justify-center bg-zinc-100 fixed sm:static w-full mt-44 sm:mt-0 shadow-sm sm:shadow-none'>
+                        <ul className='sm:flex sm:justify-center bg-zinc-100 fixed sm:static w-full mt-40 sm:mt-0 shadow-sm sm:shadow-none'>
                             <li className="hover:bg-zinc-200">
                                 <Link to="/" onClick={() => phone && setSowPhoneMenu(!sowPhoneMenu)} className="h-14 px-6 flex justify-center items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-house-door-fill" viewBox="0 0 16 16">
