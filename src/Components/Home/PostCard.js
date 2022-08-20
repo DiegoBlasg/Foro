@@ -1,4 +1,4 @@
-const Post = () => {
+const PostCard = () => {
     return (
         <div className='flex items-center justify-center my-5'>
             <div className="rounded-md border p-5 shadow-md sm:w-10/12 bg-white">
@@ -42,4 +42,4 @@ const Post = () => {
     )
 
 }
-export default Post
+export default PostCard

@@ -1,5 +1,5 @@
 import Filters from "./Filters";
-import Post from "./Post";
+import PostCard from "./PostCard";
 import Search from "./Search";
 
 const Home = () => {
@@ -13,14 +13,14 @@ const Home = () => {
             <Filters />
 
             <div>
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
+                <PostCard />
+                <PostCard />
+                <PostCard />
+                <PostCard />
+                <PostCard />
+                <PostCard />
+                <PostCard />
+                <PostCard />
             </div>
 
         </div >
