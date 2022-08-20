@@ -1,7 +1,9 @@
+import { Link } from 'react-router-dom';
+
 const PostCard = () => {
     return (
         <div className='flex items-center justify-center my-5'>
-            <div className="rounded-md border p-5 shadow-md sm:w-10/12 bg-white">
+            <Link to="/post" className="rounded-md border p-5 shadow-md sm:w-10/12 bg-white cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
                 <div className="flex flex-wrap flex-col  sm:flex-row items-center justify-between space-y-4 w-full sm:space-y-0 border-b pb-3">
                     <div className="flex items-center space-x-3">
                         <div className="h-8 w-8 rounded-full bg-slate-400"></div>
@@ -13,7 +15,7 @@ const PostCard = () => {
                 </div>
 
                 <div className="mt-4 mb-6">
-                    <div className="mb-3 text-xl font-bold">Lorem ipsum dolor sit amet, consectetur adipisicing elit?</div>
+                    <div className="mb-3 text-xl font-bold text-center sm:text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit?</div>
                     <div className="text-sm text-neutral-600">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquam nemo quisquam possimus
                         consequuntur excepturi? Beatae aliquid quidem alias consequatur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
                         lorem, ipsum dolor sit amet consectetur adipisicing elit alias consequatur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
@@ -37,7 +39,7 @@ const PostCard = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Link>
         </div>
     )
 
