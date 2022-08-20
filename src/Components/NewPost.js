@@ -1,68 +1,30 @@
-import Answer from "./Answer"
-
-const Post = () => {
+const NewPost = () => {
     return (
         <div>
             <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
 
             <div className='flex items-center justify-center pt-20 sm:mt-18 mb-4'>
-                <div className="rounded-md border p-5 shadow-md sm:w-10/12 bg-white">
-                    <div className="flex flex-wrap flex-col items-start space-y-4 w-full pb-3 border-b">
-                        <div className="flex justify-between space-x-3 w-full">
-                            <div className="flex items-center space-x-3">
-                                <div className="h-8 w-8 rounded-full bg-slate-400"></div>
-                                <div className="text-lg font-bold text-slate-700">Name</div>
-                            </div>
+                <div className="rounded-md border p-5 shadow-md w-full lg:w-7/12 md:w-10/12 bg-white">
 
-                            <div className="flex space-x-4 md:space-x-8">
-                                <div className="flex items-center">
-                                    <div className="text-xs text-neutral-500">2 hours ago</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex items-center flex-wrap">
-                            <button className="rounded-2xl mb-2 mx-1 border bg-red-600 text-white px-3 py-1 text-xs font-semibold">Category</button>
+                    <div className="flex items-center justify-center mt-5">
+                        <div className="flex justify-between  bg-white w-full sm:w-10/12">
+                            <h2 className="cursor-pointer px-4 pt-3 pb-2 text-center w-full bg-zinc-300 hover:bg-zinc-300">Write</h2>
+                            <h2 className="cursor-pointer px-4 pt-3 pb-2 text-center w-full bg-zinc-200 hover:bg-zinc-300">Preview</h2>
                         </div>
                     </div>
 
-                    <div className="mt-4 mb-6 border-b py-3">
-                        <div className="mb-3 text-4xl font-bold text-center pb-6 border-b">Lorem ipsum dolor sit amet, consectetur adipisicing elit?</div>
-                        <div className="text-md text-zinc-600 sm:px-5 px-2">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquam nemo quisquam possimus
-                            consequuntur excepturi? Beatae aliquid quidem alias consequatur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
-                            lorem, ipsum dolor sit amet consectetur adipisicing elit alias consequatur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
-                            lorem, ipsum dolor sit amet consectetur adipisicing elit<br />tur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
-                            lorem, ipsum dolor sit amet consectetur adipisicing elit alias consequatur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
-                            lorem, ipsum dolor sit amet consectetur adipisicing elit<br />adipisicing elit<br />tur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores
-                            debitis! lorem, ipsum dolor sit amet consectetur adipisicing elit a<br />adipisicing elit<br />tur. Iusto delectus ut tempora eum ab sapiente temporibus
-                            dolor dolores debitis! lorem, ipsum dolor sit amet consectetur adipisicing elit a</div>
+                    <div className="flex items-center justify-center mt-5">
+                        <form className="bg-white w-full sm:w-10/12">
+                            <div className="w-full shadow-md">
+                                <input type="text" id="simple-search" className="rounded border border-gray-300 resize-y w-full py-2 px-3" placeholder="Title" required />
+                            </div>
+                        </form>
                     </div>
 
-                </div>
-            </div>
-
-            <div className='flex items-center justify-center pt-4 border-b'>
-                <div className="rounded-md border p-5 shadow-md sm:w-10/12 bg-white">
-                    <div className="mb-6 pb-6 border-b">
-                        <div className="text-xl font-bold text-zinc-900 sm:px-5 px-2">Answers</div>
-                    </div>
-                    <Answer />
-                    <Answer />
-                    <Answer />
-                </div>
-            </div >
-
-            <div className='flex items-center justify-center py-4'>
-                <div className="rounded-md border p-5 shadow-md w-full sm:w-10/12 bg-white">
-                    <div className="mb-6 pb-6 border-b">
-                        <div className="text-xl font-bold text-zinc-900 sm:px-5 px-2">Your Answer</div>
-                    </div>
-                    <div className="flex items-center justify-center">
-                        <form className="flex flex-col bg-white w-full lg:w-7/12 md:w-10/12">
+                    <div className="flex items-center justify-center mt-5">
+                        <form className="flex flex-col bg-white w-full sm:w-10/12">
                             <div className="flex flex-col items-center w-full">
-                                <div className="flex justify-between w-full">
-                                    <h2 className="cursor-pointer px-4 pt-3 pb-2 text-center w-full bg-zinc-300 hover:bg-zinc-300">Write</h2>
-                                    <h2 className="cursor-pointer px-4 pt-3 pb-2 text-center w-full bg-zinc-200 hover:bg-zinc-300">Preview</h2>
-                                </div>
+
                                 <div className="flex justify-between cursor-pointer w-full sm:px-6 my-3">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-justify" viewBox="0 0 16 16">
                                         <path fillRule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
@@ -118,5 +80,4 @@ const Post = () => {
         </div >
     )
 }
-export default Post
-
+export default NewPost
