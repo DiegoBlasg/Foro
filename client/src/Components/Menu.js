@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const Menu = () => {
+const Menu = ({ user }) => {
     const [sowPhoneMenu, setSowPhoneMenu] = useState(false)
     const [phone, setPhone] = useState(false)
 
@@ -16,6 +16,14 @@ const Menu = () => {
     }
 
     window.addEventListener('resize', isAPhone)
+
+    const google = () => {
+        window.open("http://localhost:4000/auth/google", "_self")
+    }
+
+    const logout = () => {
+        window.open("http://localhost:4000/auth/logout", "_self")
+    }
 
     useEffect(() => {
         isAPhone();
@@ -56,12 +64,25 @@ const Menu = () => {
                         </ul>
 
                     }
-                    <button className="h-14 px-6 flex items-center hover:bg-zinc-200" onClick={() => console.log("logout")}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                            <path d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
-                            <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
-                        </svg>
-                    </button>
+                    {
+                        user ?
+                            <button className="h-14 px-6 flex items-center hover:bg-zinc-200" onClick={logout}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                    <path d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                                    <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                                </svg>
+                            </button>
+
+                            :
+                            <div className="flex items-center justify-center">
+                                <div className="flex w-max items-center cursor-pointer rounded-2xl border hover:bg-red-500 bg-red-600 text-white px-3 py-1 font-semibold" onClick={google}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-google mr-2" viewBox="0 0 16 16">
+                                        <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
+                                    </svg>
+                                    <h1 className='font-bold'>Log in</h1>
+                                </div>
+                            </div>
+                    }
 
 
                 </div>

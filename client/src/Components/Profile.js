@@ -2,8 +2,7 @@ import PostCard from "./Home/PostCard";
 import './animation.css'
 import { Link } from "react-router-dom";
 
-const Profile = () => {
-
+const Profile = ({ user }) => {
     return (
         <div>
             <div className='bg-zinc-300 fixed w-full h-full -z-10'></div>
@@ -12,11 +11,12 @@ const Profile = () => {
                 <div className="rounded-md shadow-md mt-16 w-full lg:w-7/12 md:w-10/12 bg-white">
                     <div className="flex flex-col justify-center">
                         <div className="flex justify-center">
-                            <img src="https://cdn.pixabay.com/photo/2017/02/23/13/05/avatar-2092113_1280.png"
-                                className="bg-zinc-100 shadow-xl rounded-full -m-16 max-w-[150px]" />
+                            <img src={user.photos[0].value}
+                                className="bg-zinc-100 shadow-xl rounded-full -m-16 h-32 max-w-[150px]" />
                         </div>
                         <div className="text-center mt-20">
-                            <h3 className="text-2xl text-zinc-700 font-bold">Name</h3>
+                            <h3 className="text-2xl text-zinc-700 font-bold">{user.displayName}</h3>
+                            <h3 className="text-md text-zinc-500 font-bold">{user.emails[0].value}</h3>
                         </div>
                         <div className="flex justify-center mt-2">
                             <div className="p-3 text-center">
@@ -88,4 +88,3 @@ const Profile = () => {
     );
 }
 export default Profile
-

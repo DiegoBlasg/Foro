@@ -1,19 +1,45 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Menu from './Components/Menu';
 import Home from './Components/Home/Home';
 import Profile from './Components/Profile';
 import Post from './Components/Post/Post';
 import NewPost from './Components/NewPost';
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const getUser = () => {
+    fetch("http://localhost:4000/auth/login/success", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) return response.json();
+        throw new Error("authentication has been failed!");
+      })
+      .then((resObject) => {
+        setUser(resObject.user);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    getUser();
+  }, [])
   return (
     <BrowserRouter>
-      <Menu />
+      <Menu user={user} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/post" element={<Post />} />
-        <Route path="/newpost" element={<NewPost />} />
+        <Route path="/profile" element={user ? <Profile user={user} /> : <Navigate to="/" />} />
+        <Route path="/post" element={user ? <Post user={user} /> : <Navigate to="/" />} />
+        <Route path="/newpost" element={user ? <NewPost user={user} /> : <Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
 
