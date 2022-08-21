@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: false }));
  * Routes
  */
 
-app.use('/user', require('./routes/user'));
+app.use('/post', require('./routes/post'));
 app.use('/auth', require('./Routes/auth'))
 
 /**Start listening */

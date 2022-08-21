@@ -78,11 +78,11 @@ const Profile = ({ user }) => {
                             Dark Mode*/}
                     </div>
                 </div>
+                {/*<PostCard />
                 <PostCard />
                 <PostCard />
                 <PostCard />
-                <PostCard />
-                <PostCard />
+                <PostCard />*/}
             </div >
         </div >
     );

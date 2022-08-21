@@ -1,7 +1,16 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import PostCard from "./PostCard";
 
 const Home = () => {
-
+    const [posts, setPosts] = useState([])
+    const getPosts = async () => {
+        const res = await axios.get('http://localhost:4000/post/all')
+        setPosts(res.data.posts)
+    }
+    useEffect(() => {
+        getPosts()
+    }, [])
     return (
         <div>
             <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
@@ -45,14 +54,11 @@ const Home = () => {
             </div>
 
             <div>
-                <PostCard />
-                <PostCard />
-                <PostCard />
-                <PostCard />
-                <PostCard />
-                <PostCard />
-                <PostCard />
-                <PostCard />
+                {
+                    posts.slice().reverse().map(post => (
+                        <PostCard key={post.id_post} post={post} />
+                    ))
+                }
             </div>
 
         </div >

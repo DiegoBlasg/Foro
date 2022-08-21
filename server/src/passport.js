@@ -14,7 +14,17 @@ passport.use(new GoogleStrategy({
     const userEmail = profile.emails[0].value
     const sql = 'SELECT * FROM users WHERE email = ?';
     const rows = await pool.query(sql, userEmail);
-    if (!rows.length) {
+    if (rows.length) {
+        if (rows[0].image != profile.photos[0].value) {
+            const sql = "UPDATE users SET image = ? WHERE id_user = ?";
+            await pool.query(sql, [profile.photos[0].value, rows[0].id_user]);
+        }
+        if (rows[0].user_name != profile.displayName) {
+            const sql = "UPDATE users SET user_name = ? WHERE id_user = ?";
+            await pool.query(sql, [profile.displayName, rows[0].id_user]);
+
+        }
+    } else {
         const sql = "INSERT INTO users (email, is_admin) VALUES(?, false)";
         await pool.query(sql, userEmail);
     }

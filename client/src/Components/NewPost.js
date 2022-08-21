@@ -1,4 +1,49 @@
+import axios from 'axios'
+import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+
 const NewPost = () => {
+    const [is_anonymous, setIs_anonymous] = useState(false)
+    const [tags, setTags] = useState([])
+    const [tagsIncluded, setTagsIncluded] = useState([])
+
+    const navigate = useNavigate();
+
+    const post = async () => {
+        const postData = {
+            title: document.getElementById("title").value,
+            description: document.getElementById("description").value,
+            is_anonymous: is_anonymous
+        }
+        const res = await axios.post('http://localhost:4000/post/new', postData)
+
+        const postId = res.data.insertId
+
+        const tagsData = {
+            tags: tagsIncluded
+        }
+        await axios.post('http://localhost:4000/post/' + postId + '/tags', tagsData)
+
+        navigate("/");
+    }
+
+    const addOrDropTagIncluded = (id) => {
+        if (tagsIncluded.includes(id)) {
+            const tag = tagsIncluded.filter((tag) => tag != id)
+            setTagsIncluded(tag)
+            return;
+        }
+        setTagsIncluded([...tagsIncluded, id])
+    }
+
+    const getTags = async () => {
+        const res = await axios.get('http://localhost:4000/post/tags')
+        setTags(res.data.tags)
+    }
+    useEffect(() => {
+        getTags()
+    }, [])
+
     return (
         <div>
             <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
@@ -12,11 +57,26 @@ const NewPost = () => {
                             <h2 className="cursor-pointer px-4 pt-3 pb-2 text-center w-full bg-zinc-200 hover:bg-zinc-300">Preview</h2>
                         </div>
                     </div>
-
+                    <div className="flex items-center justify-center mt-5 ">
+                        <div className='bg-zinc-100 flex items-center justify-center w-full sm:w-10/12 py-2 shadow-md rounded-md'>
+                            <ul className="flex flex-wrap">
+                                {
+                                    tags.map((tag) => (
+                                        <li className="py-1" key={tag.id_tag}>
+                                            <input type="checkbox" id={tag.id_tag} value={tag.id_tag} className="hidden peer" onClick={() => addOrDropTagIncluded(tag.id_tag)} />
+                                            <label htmlFor={tag.id_tag} className={`inline-flex justify-between items-center px-2 mx-3 text-gray-500 bg-white rounded-lg border-2 border-gray-200 cursor-pointer peer-checked:border-${tag.color}-600 peer-checked:text-gray-100 hover:text-gray-800 peer-checked:bg-${tag.color}-500 hover:bg-${tag.color}-400`}>
+                                                <h1>{tag.name}</h1>
+                                            </label>
+                                        </li>
+                                    ))
+                                }
+                            </ul>
+                        </div>
+                    </div>
                     <div className="flex items-center justify-center mt-5">
                         <form className="bg-white w-full sm:w-10/12">
                             <div className="w-full shadow-md">
-                                <input type="text" id="simple-search" className="rounded border border-gray-300 resize-y w-full py-2 px-3" placeholder="Title" required />
+                                <input type="text" id="title" className="rounded border border-gray-300 resize-y w-full py-2 px-3" placeholder="Title" required />
                             </div>
                         </form>
                     </div>
@@ -67,11 +127,17 @@ const NewPost = () => {
                             <div className="w-full md:w-full my-2">
                                 <textarea
                                     className="rounded border border-gray-400 resize-y w-full h-32 py-2 px-3"
-                                    name="body"
+                                    id="description"
                                     placeholder='Add Your Comment...' required></textarea>
                             </div>
-                            <div className="w-full flex justify-end">
-                                <input type='submit' className="bg-red-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-red-500" value='Post' />
+                            <div className="w-full flex justify-between">
+                                <div className={`${is_anonymous ? 'bg-red-600 text-zinc-300' : 'text-zinc-800'} cursor-pointer rounded-full p-1`} onClick={() => setIs_anonymous(!is_anonymous)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-incognito" viewBox="0 0 16 16">
+                                        <path fillRule="evenodd" d="m4.736 1.968-.892 3.269-.014.058C2.113 5.568 1 6.006 1 6.5 1 7.328 4.134 8 8 8s7-.672 7-1.5c0-.494-1.113-.932-2.83-1.205a1.032 1.032 0 0 0-.014-.058l-.892-3.27c-.146-.533-.698-.849-1.239-.734C9.411 1.363 8.62 1.5 8 1.5c-.62 0-1.411-.136-2.025-.267-.541-.115-1.093.2-1.239.735Zm.015 3.867a.25.25 0 0 1 .274-.224c.9.092 1.91.143 2.975.143a29.58 29.58 0 0 0 2.975-.143.25.25 0 0 1 .05.498c-.918.093-1.944.145-3.025.145s-2.107-.052-3.025-.145a.25.25 0 0 1-.224-.274ZM3.5 10h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Zm-1.5.5c0-.175.03-.344.085-.5H2a.5.5 0 0 1 0-1h3.5a1.5 1.5 0 0 1 1.488 1.312 3.5 3.5 0 0 1 2.024 0A1.5 1.5 0 0 1 10.5 9H14a.5.5 0 0 1 0 1h-.085c.055.156.085.325.085.5v1a2.5 2.5 0 0 1-5 0v-.14l-.21-.07a2.5 2.5 0 0 0-1.58 0l-.21.07v.14a2.5 2.5 0 0 1-5 0v-1Zm8.5-.5h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Z" />
+                                    </svg>
+                                </div>
+
+                                <div className="cursor-pointer bg-red-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-red-500" onClick={() => post()} >Post</div>
                             </div>
                         </form>
                     </div>
