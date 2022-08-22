@@ -4,16 +4,47 @@ import { useEffect, useState } from 'react';
 
 const PostCard = ({ post }) => {
     const [tags, setTags] = useState([])
+    const [timeAgo, setTimeAgo] = useState("")
+    useEffect(() => {
+        const now = new Date();
+        const created_at = new Date(post.created_at)
+
+        const seconds = Math.floor(((now - created_at) / 1000))
+        const minutes = Math.floor(((now - created_at) / 1000) / 60)
+        const hours = Math.floor(((now - created_at) / 1000) / 3600)
+        const days = Math.floor(((now - created_at) / 1000) / 86400)
+        const weeks = Math.floor(((now - created_at) / 1000) / 604800)
+
+        if (weeks > 0) {
+            setTimeAgo(weeks + " weeks ago")
+        } else if (days > 0) {
+            setTimeAgo(days + " days ago")
+        } else if (hours > 0) {
+            setTimeAgo(hours + " hours ago")
+        } else if (minutes > 0) {
+            setTimeAgo(minutes + " minutes ago")
+        } else if (seconds > 0) {
+            setTimeAgo(seconds + " seconds ago")
+        } else {
+            setTimeAgo("now")
+        }
+    }, [])
+    const [NumberOfComments, setNumberOfComments] = useState([])
     const getTags = async () => {
         const res = await axios.get('http://localhost:4000/post/' + post.id_post + '/tags')
         setTags(res.data.tags);
     }
+    const getNumberOfComments = async () => {
+        const res = await axios.get('http://localhost:4000/post/' + post.id_post + '/comments/number')
+        setNumberOfComments(res.data.numberOfComments);
+    }
     useEffect(() => {
         getTags()
+        getNumberOfComments()
     }, [])
     return (
         <div className='flex items-center justify-center my-5'>
-            <Link to="/post" className="rounded-md border p-5 shadow-md w-full lg:w-7/12 md:w-10/12 bg-white cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
+            <Link to={`/post/${post.id_post}`} className="rounded-md border p-5 shadow-md w-full lg:w-7/12 md:w-10/12 bg-white cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
                 <div className="flex flex-wrap flex-col  sm:flex-row items-center justify-between space-y-4 w-full sm:space-y-0 border-b pb-3">
                     <div className="flex items-center space-x-3">
                         <div className="h-8 w-8 rounded-full">
@@ -44,8 +75,8 @@ const PostCard = ({ post }) => {
                 </div>
 
                 <div className="mt-4 mb-6">
-                    <div className="mb-3 text-xl font-bold text-center sm:text-left">{post.title}</div>
-                    <div className="text-sm text-neutral-600">{post.description}</div>
+                    <div className="mb-3 text-xl font-bold text-center sm:text-left" style={{ wordWrap: "break-word" }}>{post.title}</div>
+                    <div className="text-sm text-neutral-600" style={{ wordWrap: "break-word" }}>{post.description}</div>
                 </div>
 
                 <div>
@@ -55,12 +86,12 @@ const PostCard = ({ post }) => {
                                 <svg xmlns="http://www.w3.org/2000/svg" className="mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                                 </svg>
-                                <span>0</span>
+                                <span>{NumberOfComments}</span>
                             </div>
                         </div>
                         <div className="flex space-x-4 md:space-x-8">
                             <div className="flex items-center">
-                                <div className="text-xs text-neutral-500">2 hours ago</div>
+                                <div className="text-xs text-neutral-500">{timeAgo}</div>
                             </div>
                         </div>
                     </div>

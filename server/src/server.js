@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieSession = require('cookie-session');
 const cors = require('cors');
-const passportSetup = require('./passport')
+const passportSetup = require('./GoogleAuth/passport')
 const passport = require('passport');
 const dotenv = require('dotenv');
 
@@ -40,7 +40,7 @@ app.use(express.urlencoded({ extended: false }));
  */
 
 app.use('/post', require('./routes/post'));
-app.use('/auth', require('./Routes/auth'))
+app.use('/auth', require('./GoogleAuth/auth'))
 
 /**Start listening */
 

@@ -15,7 +15,7 @@ const NewPost = () => {
             description: document.getElementById("description").value,
             is_anonymous: is_anonymous
         }
-        const res = await axios.post('http://localhost:4000/post/new', postData)
+        const res = await axios.post('http://localhost:4000/post', postData)
 
         const postId = res.data.insertId
 
@@ -37,7 +37,7 @@ const NewPost = () => {
     }
 
     const getTags = async () => {
-        const res = await axios.get('http://localhost:4000/post/tags')
+        const res = await axios.get('http://localhost:4000/post/tags/all')
         setTags(res.data.tags)
     }
     useEffect(() => {

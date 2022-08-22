@@ -38,7 +38,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={user ? <Profile user={user} /> : <Navigate to="/" />} />
-        <Route path="/post" element={user ? <Post user={user} /> : <Navigate to="/" />} />
+        <Route path="/post/:id_post" element={user ? <Post user={user} /> : <Navigate to="/" />} />
         <Route path="/newpost" element={user ? <NewPost user={user} /> : <Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

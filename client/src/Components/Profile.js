@@ -12,7 +12,7 @@ const Profile = ({ user }) => {
                     <div className="flex flex-col justify-center">
                         <div className="flex justify-center">
                             <img src={user.photos[0].value}
-                                className="bg-zinc-100 shadow-xl rounded-full -m-16 h-32 max-w-[150px]" />
+                                className="bg-zinc-100 shadow-xl rounded-full -m-16 h-32 max-w-[150px]" alt="profile picture" />
                         </div>
                         <div className="text-center mt-20">
                             <h3 className="text-2xl text-zinc-700 font-bold">{user.displayName}</h3>

@@ -1,11 +1,10 @@
 const passport = require('passport')
 const dotenv = require('dotenv');
-const pool = require('./database')
+const pool = require('../database')
 
 dotenv.config({ path: '.env.local' });
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy
-
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -25,8 +24,8 @@ passport.use(new GoogleStrategy({
 
         }
     } else {
-        const sql = "INSERT INTO users (email, is_admin) VALUES(?, false)";
-        await pool.query(sql, userEmail);
+        const sql = "INSERT INTO users (email, is_admin, image, user_name) VALUES(?, false, ?, ?)";
+        await pool.query(sql, [userEmail, profile.photos[0].value, profile.displayName]);
     }
     return done(null, profile)
 }))

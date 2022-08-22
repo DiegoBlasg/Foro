@@ -1,58 +1,137 @@
+import axios from "axios"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import Answer from "./Answer"
 
 const Post = () => {
+    const postId = useParams().id_post
+    const [comments, setComments] = useState([])
+    const [post, setPost] = useState({})
+    const [tags, setTags] = useState([])
+    const [is_anonymous, setIs_anonymous] = useState(false)
+    const [timeAgo, setTimeAgo] = useState("")
+    useEffect(() => {
+        if (post) {
+            const now = new Date();
+            const created_at = new Date(post.created_at)
+
+            const seconds = Math.floor(((now - created_at) / 1000))
+            const minutes = Math.floor(((now - created_at) / 1000) / 60)
+            const hours = Math.floor(((now - created_at) / 1000) / 3600)
+            const days = Math.floor(((now - created_at) / 1000) / 86400)
+            const weeks = Math.floor(((now - created_at) / 1000) / 604800)
+
+            if (weeks > 0) {
+                setTimeAgo(weeks + " weeks ago")
+            } else if (days > 0) {
+                setTimeAgo(days + " days ago")
+            } else if (hours > 0) {
+                setTimeAgo(hours + " hours ago")
+            } else if (minutes > 0) {
+                setTimeAgo(minutes + " minutes ago")
+            } else if (seconds > 0) {
+                setTimeAgo(seconds + " seconds ago")
+            } else {
+                setTimeAgo("now")
+            }
+        }
+
+    }, [post])
+
+    const getTags = async () => {
+        const res = await axios.get('http://localhost:4000/post/' + post.id_post + '/tags')
+        setTags(res.data.tags);
+    }
+    const newComment = async () => {
+        const commentData = {
+            content: document.getElementById("commentContent").value,
+            is_anonymous: is_anonymous
+        }
+        await axios.post('http://localhost:4000/post/' + postId + '/comments', commentData)
+        getComments()
+        document.getElementById("commentContent").value = ""
+    }
+    const getPostInfo = async () => {
+        const res = await axios.get('http://localhost:4000/post/' + postId)
+        setPost(res.data.post)
+    }
+
+    const getComments = async () => {
+        const res = await axios.get('http://localhost:4000/post/' + postId + '/comments')
+        setComments(res.data.comments)
+        console.log(res.data.comments);
+    }
+
+    useEffect(() => {
+        getComments()
+        getPostInfo()
+        getTags()
+    }, [])
     return (
         <div>
             <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
 
             <div className='flex items-center justify-center pt-20 sm:mt-18 mb-4'>
-                <div className="rounded-md border p-5 shadow-md sm:w-10/12 bg-white">
+                <div className="rounded-md border p-5 shadow-md w-full lg:w-7/12 md:w-10/12 bg-white">
                     <div className="flex flex-wrap flex-col items-start space-y-4 w-full pb-3 border-b">
                         <div className="flex justify-between space-x-3 w-full">
-                            <div className="flex items-center space-x-3">
-                                <div className="h-8 w-8 rounded-full bg-slate-400"></div>
-                                <div className="text-lg font-bold text-slate-700">Name</div>
-                            </div>
+                            <div className="flex space-x-2 items-center">
+                                <div className="h-8 w-8 rounded-full">
+                                    {
+                                        post.is_anonymous ?
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-incognito" viewBox="0 0 16 16">
+                                                <path fillRule="evenodd" d="m4.736 1.968-.892 3.269-.014.058C2.113 5.568 1 6.006 1 6.5 1 7.328 4.134 8 8 8s7-.672 7-1.5c0-.494-1.113-.932-2.83-1.205a1.032 1.032 0 0 0-.014-.058l-.892-3.27c-.146-.533-.698-.849-1.239-.734C9.411 1.363 8.62 1.5 8 1.5c-.62 0-1.411-.136-2.025-.267-.541-.115-1.093.2-1.239.735Zm.015 3.867a.25.25 0 0 1 .274-.224c.9.092 1.91.143 2.975.143a29.58 29.58 0 0 0 2.975-.143.25.25 0 0 1 .05.498c-.918.093-1.944.145-3.025.145s-2.107-.052-3.025-.145a.25.25 0 0 1-.224-.274ZM3.5 10h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Zm-1.5.5c0-.175.03-.344.085-.5H2a.5.5 0 0 1 0-1h3.5a1.5 1.5 0 0 1 1.488 1.312 3.5 3.5 0 0 1 2.024 0A1.5 1.5 0 0 1 10.5 9H14a.5.5 0 0 1 0 1h-.085c.055.156.085.325.085.5v1a2.5 2.5 0 0 1-5 0v-.14l-.21-.07a2.5 2.5 0 0 0-1.58 0l-.21.07v.14a2.5 2.5 0 0 1-5 0v-1Zm8.5-.5h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Z" />
+                                            </svg>
+                                            :
+                                            <img src={post.image} alt="" className='rounded-full' />
+                                    }
 
+
+                                </div>
+
+                                <div>
+                                    <div className="text-lg font-bold text-zinc-700">{post.is_anonymous ? 'Anonymous' : post.user_name}</div>
+                                    <div className="text-xs font-bold text-zinc-500">{post.is_anonymous ? '' : post.email}</div>
+                                </div>
+                            </div>
                             <div className="flex space-x-4 md:space-x-8">
                                 <div className="flex items-center">
-                                    <div className="text-xs text-neutral-500">2 hours ago</div>
+                                    <div className="text-xs text-neutral-500">{timeAgo}</div>
                                 </div>
                             </div>
                         </div>
                         <div className="flex items-center flex-wrap">
-                            <button className="rounded-2xl mb-2 mx-1 border bg-red-600 text-white px-3 py-1 text-xs font-semibold">Category</button>
+                            {
+                                tags.map((tag) => (
+                                    <button className={`rounded-2xl mb-2 mx-1 border bg-${tag.color}-600 text-white px-3 py-1 text-xs font-semibold`} key={tag.id_tag}>{tag.name}</button>
+                                ))
+                            }
                         </div>
                     </div>
 
                     <div className="mt-4 mb-6 border-b py-3">
-                        <div className="mb-3 text-4xl font-bold text-center pb-6 border-b">Lorem ipsum dolor sit amet, consectetur adipisicing elit?</div>
-                        <div className="text-md text-zinc-600 sm:px-5 px-2">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquam nemo quisquam possimus
-                            consequuntur excepturi? Beatae aliquid quidem alias consequatur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
-                            lorem, ipsum dolor sit amet consectetur adipisicing elit alias consequatur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
-                            lorem, ipsum dolor sit amet consectetur adipisicing elit<br />tur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
-                            lorem, ipsum dolor sit amet consectetur adipisicing elit alias consequatur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores debitis!
-                            lorem, ipsum dolor sit amet consectetur adipisicing elit<br />adipisicing elit<br />tur. Iusto delectus ut tempora eum ab sapiente temporibus dolor dolores
-                            debitis! lorem, ipsum dolor sit amet consectetur adipisicing elit a<br />adipisicing elit<br />tur. Iusto delectus ut tempora eum ab sapiente temporibus
-                            dolor dolores debitis! lorem, ipsum dolor sit amet consectetur adipisicing elit a</div>
+                        <div className="mb-3 text-xl font-bold text-center sm:text-left" style={{ wordWrap: "break-word" }}>{post.title}</div>
+                        <div className="text-sm text-neutral-600" style={{ wordWrap: "break-word" }}>{post.description}</div>
                     </div>
 
                 </div>
             </div>
 
             <div className='flex items-center justify-center pt-4 border-b'>
-                <div className="rounded-md border p-5 shadow-md sm:w-10/12 bg-white">
+                <div className="rounded-md border p-5 shadow-md  w-full lg:w-7/12 md:w-10/12 bg-white">
                     <div className="mb-6 pb-6 border-b">
-                        <div className="text-xl font-bold text-zinc-900 sm:px-5 px-2">Answers</div>
+                        <div className="text-xl font-bold text-zinc-900 sm:px-5 px-2">Comments</div>
                     </div>
-                    <Answer />
-                    <Answer />
-                    <Answer />
+                    {
+                        comments.map((com) => (
+                            <Answer key={com.id_comment} comment={com} />
+                        ))
+                    }
                 </div>
             </div >
 
             <div className='flex items-center justify-center py-4'>
-                <div className="rounded-md border p-5 shadow-md w-full sm:w-10/12 bg-white">
+                <div className="rounded-md border p-5 shadow-md  w-full lg:w-7/12 md:w-10/12 bg-white">
                     <div className="mb-6 pb-6 border-b">
                         <div className="text-xl font-bold text-zinc-900 sm:px-5 px-2">Your Answer</div>
                     </div>
@@ -106,10 +185,16 @@ const Post = () => {
                                 <textarea
                                     className="rounded border border-gray-400 resize-y w-full h-32 py-2 px-3"
                                     name="body"
-                                    placeholder='Add Your Comment...' required></textarea>
+                                    placeholder='Add Your Comment...' required id="commentContent"></textarea>
                             </div>
-                            <div className="w-full flex justify-end">
-                                <input type='submit' className="bg-red-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-red-500" value='Post' />
+                            <div className="w-full flex justify-between">
+                                <div className={`${is_anonymous ? 'bg-red-600 text-zinc-300' : 'text-zinc-800'} cursor-pointer rounded-full p-1`} onClick={() => setIs_anonymous(!is_anonymous)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-incognito" viewBox="0 0 16 16">
+                                        <path fillRule="evenodd" d="m4.736 1.968-.892 3.269-.014.058C2.113 5.568 1 6.006 1 6.5 1 7.328 4.134 8 8 8s7-.672 7-1.5c0-.494-1.113-.932-2.83-1.205a1.032 1.032 0 0 0-.014-.058l-.892-3.27c-.146-.533-.698-.849-1.239-.734C9.411 1.363 8.62 1.5 8 1.5c-.62 0-1.411-.136-2.025-.267-.541-.115-1.093.2-1.239.735Zm.015 3.867a.25.25 0 0 1 .274-.224c.9.092 1.91.143 2.975.143a29.58 29.58 0 0 0 2.975-.143.25.25 0 0 1 .05.498c-.918.093-1.944.145-3.025.145s-2.107-.052-3.025-.145a.25.25 0 0 1-.224-.274ZM3.5 10h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Zm-1.5.5c0-.175.03-.344.085-.5H2a.5.5 0 0 1 0-1h3.5a1.5 1.5 0 0 1 1.488 1.312 3.5 3.5 0 0 1 2.024 0A1.5 1.5 0 0 1 10.5 9H14a.5.5 0 0 1 0 1h-.085c.055.156.085.325.085.5v1a2.5 2.5 0 0 1-5 0v-.14l-.21-.07a2.5 2.5 0 0 0-1.58 0l-.21.07v.14a2.5 2.5 0 0 1-5 0v-1Zm8.5-.5h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Z" />
+                                    </svg>
+                                </div>
+
+                                <div className="cursor-pointer bg-red-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-red-500" onClick={newComment} >Post</div>
                             </div>
                         </form>
                     </div>
