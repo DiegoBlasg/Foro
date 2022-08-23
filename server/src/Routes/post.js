@@ -1,6 +1,4 @@
 const express = require('express');
-const pool = require('../database')
-const passport = require('passport')
 const router = express.Router();
 const { getPosts, getOnePost, newPost, getTags, getPostTags, newPostTags, getPostComments, newPostComment, getNumberOfCommentsOnAPost } = require('../Controllers/posts.controllers')
 
