@@ -10,11 +10,21 @@ router.get("/login/failed", (req, res) => {
 router.get("/login/success", async (req, res) => {
     if (req.user) {
         const userEmail = req.user.emails[0].value
-        const sql = 'SELECT * FROM users WHERE email = ?';
-        const rows = await pool.query(sql, userEmail);
-        if (!rows.length) {
-            const sql = "INSERT INTO users (email, is_admin) VALUES(?, false)";
-            await pool.query(sql, userEmail);
+        const sql1 = 'SELECT * FROM users WHERE email = ?';
+        const user = await pool.query(sql1, userEmail);
+        if (user.length) {
+            if (user[0].image != req.user.photos[0].value) {
+                const sql = "UPDATE users SET user_image = ? WHERE email = ?";
+                await pool.query(sql, [req.user.photos[0].value, user[0].email]);
+            }
+            if (user[0].user_name != req.user.displayName) {
+                const sql = "UPDATE users SET user_name = ? WHERE email = ?";
+                await pool.query(sql, [req.user.displayName, user[0].email]);
+
+            }
+        } else {
+            const sql = "INSERT INTO users (email, is_admin, user_image, user_name) VALUES(?, false, ?, ?)";
+            await pool.query(sql, [userEmail, req.user.photos[0].value, req.user.displayName]);
         }
         res.status(200).json({ success: true, message: "successfull", user: req.user })
     }

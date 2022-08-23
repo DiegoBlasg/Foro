@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieSession = require('cookie-session');
 const cors = require('cors');
-const passportSetup = require('./GoogleAuth/passport')
+const passportSetup = require('./passport')
 const passport = require('passport');
 const dotenv = require('dotenv');
 
@@ -19,7 +19,7 @@ const app = express();
 app.use(cookieSession({
     name: "session",
     keys: [process.env.SECRET_COOCKIE_KEY],
-    maxAge: 5 * 24 * 60 * 60 * 100
+    maxAge: 24 * 60 * 60 * 100
 }));
 
 app.use(passport.initialize());
@@ -39,8 +39,8 @@ app.use(express.urlencoded({ extended: false }));
  * Routes
  */
 
-app.use('/post', require('./routes/post'));
-app.use('/auth', require('./GoogleAuth/auth'))
+app.use('/post', require('./Routes/post'));
+app.use('/auth', require('./Routes/auth'))
 
 /**Start listening */
 

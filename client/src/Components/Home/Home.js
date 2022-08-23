@@ -22,7 +22,7 @@ const Home = () => {
             <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
 
             <div className='flex items-center justify-center pt-20 sm:mt-18'>
-                <form className='flex justify-center w-full lg:w-7/12 md:w-10/12'>
+                <form className='flex justify-center w-full lg:w-8/12 md:w-10/12'>
                     <div className="relative w-full shadow-md">
                         <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                             <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -35,7 +35,7 @@ const Home = () => {
             </div>
 
             <div className='flex items-center justify-center my-5'>
-                <div className='bg-zinc-100 flex items-center justify-center w-full lg:w-7/12 md:w-10/12 py-2 shadow-md rounded-md'>
+                <div className='bg-zinc-100 flex items-center justify-center w-full lg:w-8/12 md:w-10/12 py-2 shadow-md rounded-md'>
                     <ul className="flex flex-wrap">
                         {
                             tags.map((tag) => (

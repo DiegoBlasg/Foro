@@ -2,6 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Answer from "./Answer"
+import useQueriesWithCredentials from '../useQueriesWithCredentials'
 
 const Post = () => {
     const postId = useParams().id_post
@@ -10,6 +11,7 @@ const Post = () => {
     const [tags, setTags] = useState([])
     const [is_anonymous, setIs_anonymous] = useState(false)
     const [timeAgo, setTimeAgo] = useState("")
+    const { queryWithCredentials } = useQueriesWithCredentials()
     useEffect(() => {
         if (post) {
             const now = new Date();
@@ -42,14 +44,16 @@ const Post = () => {
         const res = await axios.get('http://localhost:4000/post/' + post.id_post + '/tags')
         setTags(res.data.tags);
     }
-    const newComment = async () => {
+    const newComment = () => {
         const commentData = {
             content: document.getElementById("commentContent").value,
             is_anonymous: is_anonymous
         }
-        await axios.post('http://localhost:4000/post/' + postId + '/comments', commentData)
-        getComments()
-        document.getElementById("commentContent").value = ""
+        queryWithCredentials.post('http://localhost:4000/post/' + postId + '/comments', commentData, () => {
+            getComments()
+            document.getElementById("commentContent").value = ""
+        })
+
     }
     const getPostInfo = async () => {
         const res = await axios.get('http://localhost:4000/post/' + postId)
@@ -59,7 +63,6 @@ const Post = () => {
     const getComments = async () => {
         const res = await axios.get('http://localhost:4000/post/' + postId + '/comments')
         setComments(res.data.comments)
-        console.log(res.data.comments);
     }
 
     useEffect(() => {
@@ -71,8 +74,8 @@ const Post = () => {
         <div>
             <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
 
-            <div className='flex items-center justify-center pt-20 sm:mt-18 mb-4'>
-                <div className="rounded-md border p-5 shadow-md w-full lg:w-7/12 md:w-10/12 bg-white">
+            <div className='flex items-center justify-center pt-20 sm:mt-18'>
+                <div className="rounded-md border p-5 shadow-md w-full md:w-10/12 bg-white">
                     <div className="flex flex-wrap flex-col items-start space-y-4 w-full pb-3 border-b">
                         <div className="flex justify-between space-x-3 w-full">
                             <div className="flex space-x-2 items-center">
@@ -110,15 +113,15 @@ const Post = () => {
                     </div>
 
                     <div className="mt-4 mb-6 border-b py-3">
-                        <div className="mb-3 text-xl font-bold text-center sm:text-left" style={{ wordWrap: "break-word" }}>{post.title}</div>
-                        <div className="text-sm text-neutral-600" style={{ wordWrap: "break-word" }}>{post.description}</div>
+                        <div className="mb-3 text-3xl font-bold text-center pb-6 border-b" style={{ wordWrap: "break-word" }}>{post.title}</div>
+                        <div className="text-md text-zinc-600 sm:px-5 px-2" style={{ wordWrap: "break-word" }}>{post.description}</div>
                     </div>
 
                 </div>
             </div>
 
-            <div className='flex items-center justify-center pt-4 border-b'>
-                <div className="rounded-md border p-5 shadow-md  w-full lg:w-7/12 md:w-10/12 bg-white">
+            <div className='flex items-center justify-center pt-2 border-b'>
+                <div className="rounded-md border p-5 shadow-md  w-full md:w-10/12 bg-white">
                     <div className="mb-6 pb-6 border-b">
                         <div className="text-xl font-bold text-zinc-900 sm:px-5 px-2">Comments</div>
                     </div>
@@ -130,13 +133,13 @@ const Post = () => {
                 </div>
             </div >
 
-            <div className='flex items-center justify-center py-4'>
-                <div className="rounded-md border p-5 shadow-md  w-full lg:w-7/12 md:w-10/12 bg-white">
+            <div className='flex items-center justify-center pt-2 pb-4'>
+                <div className="rounded-md border p-5 shadow-md  w-full md:w-10/12 bg-white">
                     <div className="mb-6 pb-6 border-b">
                         <div className="text-xl font-bold text-zinc-900 sm:px-5 px-2">Your Answer</div>
                     </div>
                     <div className="flex items-center justify-center">
-                        <form className="flex flex-col bg-white w-full lg:w-7/12 md:w-10/12">
+                        <form className="flex flex-col bg-white w-full md:w-10/12">
                             <div className="flex flex-col items-center w-full">
                                 <div className="flex justify-between w-full">
                                     <h2 className="cursor-pointer px-4 pt-3 pb-2 text-center w-full bg-zinc-300 hover:bg-zinc-300">Write</h2>

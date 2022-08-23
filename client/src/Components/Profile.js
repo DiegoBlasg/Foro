@@ -8,7 +8,7 @@ const Profile = ({ user }) => {
             <div className='bg-zinc-300 fixed w-full h-full -z-10'></div>
             <div className='flex flex-col items-center pt-20 sm:mt-18'>
 
-                <div className="rounded-md shadow-md mt-16 w-full lg:w-7/12 md:w-10/12 bg-white">
+                <div className="rounded-md shadow-md mt-16 w-full lg:w-8/12 md:w-10/12 bg-white">
                     <div className="flex flex-col justify-center">
                         <div className="flex justify-center">
                             <img src={user.photos[0].value}
@@ -41,7 +41,7 @@ const Profile = ({ user }) => {
                     </div>
                 </div>
 
-                <div className="flex mt-4 -mb-1 shadow-md w-full lg:w-7/12 md:w-10/12">
+                <div className="flex mt-4 -mb-1 shadow-md w-full lg:w-8/12 md:w-10/12">
                     <div className="rounded-md flex justify-center items-center flex-col sm:flex-row cursor-pointer border border-zinc-300 w-full bg-zinc-300 hover:bg-zinc-300 text-zinc-700 font-semibold py-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-file-post mx-2" viewBox="0 0 16 16">
                             <path d="M4 3.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-8z" />

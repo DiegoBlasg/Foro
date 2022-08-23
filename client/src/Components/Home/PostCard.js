@@ -44,7 +44,7 @@ const PostCard = ({ post }) => {
     }, [])
     return (
         <div className='flex items-center justify-center my-5'>
-            <Link to={`/post/${post.id_post}`} className="rounded-md border p-5 shadow-md w-full lg:w-7/12 md:w-10/12 bg-white cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
+            <Link to={`/post/${post.id_post}`} className="rounded-md border p-5 shadow-md w-full lg:w-8/12 md:w-10/12 bg-white cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
                 <div className="flex flex-wrap flex-col  sm:flex-row items-center justify-between space-y-4 w-full sm:space-y-0 border-b pb-3">
                     <div className="flex items-center space-x-3">
                         <div className="h-8 w-8 rounded-full">

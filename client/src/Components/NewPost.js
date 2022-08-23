@@ -1,30 +1,32 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import useQueriesWithCredentials from './useQueriesWithCredentials';
 
 const NewPost = () => {
     const [is_anonymous, setIs_anonymous] = useState(false)
     const [tags, setTags] = useState([])
     const [tagsIncluded, setTagsIncluded] = useState([])
+    const { queryWithCredentials } = useQueriesWithCredentials()
 
     const navigate = useNavigate();
 
-    const post = async () => {
+    const post = () => {
         const postData = {
             title: document.getElementById("title").value,
             description: document.getElementById("description").value,
-            is_anonymous: is_anonymous
+            is_anonymous: is_anonymous,
         }
-        const res = await axios.post('http://localhost:4000/post', postData)
+        queryWithCredentials.post("http://localhost:4000/post", postData, async (resObject) => {
+            const postId = resObject.insertId
 
-        const postId = res.data.insertId
+            const tagsData = {
+                tags: tagsIncluded
+            }
+            await axios.post('http://localhost:4000/post/' + postId + '/tags', tagsData)
 
-        const tagsData = {
-            tags: tagsIncluded
-        }
-        await axios.post('http://localhost:4000/post/' + postId + '/tags', tagsData)
-
-        navigate("/");
+            navigate("/");
+        })
     }
 
     const addOrDropTagIncluded = (id) => {
@@ -49,7 +51,7 @@ const NewPost = () => {
             <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
 
             <div className='flex items-center justify-center pt-20 sm:mt-18 mb-4'>
-                <div className="rounded-md border p-5 shadow-md w-full lg:w-7/12 md:w-10/12 bg-white">
+                <div className="rounded-md border p-5 shadow-md w-full lg:w-8/12 md:w-10/12 bg-white">
 
                     <div className="flex items-center justify-center mt-5">
                         <div className="flex justify-between  bg-white w-full sm:w-10/12">
