@@ -1,45 +1,27 @@
 import { Link } from 'react-router-dom';
-import axios from 'axios'
 import { useEffect, useState } from 'react';
+import { getNumberOfCommentsService, getPostTagsService } from '../../Services/post.service';
+import { numberOfCommentsAdapter, tagsAdapter } from '../../Adapters/post.adapter';
+import { elapsedTime } from "../../Utilities/format-elapsedTime.utility"
 
 const PostCard = ({ post }) => {
     const [tags, setTags] = useState([])
     const [timeAgo, setTimeAgo] = useState("")
-    useEffect(() => {
-        const now = new Date();
-        const created_at = new Date(post.created_at)
-
-        const seconds = Math.floor(((now - created_at) / 1000))
-        const minutes = Math.floor(((now - created_at) / 1000) / 60)
-        const hours = Math.floor(((now - created_at) / 1000) / 3600)
-        const days = Math.floor(((now - created_at) / 1000) / 86400)
-        const weeks = Math.floor(((now - created_at) / 1000) / 604800)
-
-        if (weeks > 0) {
-            setTimeAgo(weeks + " weeks ago")
-        } else if (days > 0) {
-            setTimeAgo(days + " days ago")
-        } else if (hours > 0) {
-            setTimeAgo(hours + " hours ago")
-        } else if (minutes > 0) {
-            setTimeAgo(minutes + " minutes ago")
-        } else if (seconds > 0) {
-            setTimeAgo(seconds + " seconds ago")
-        } else {
-            setTimeAgo("now")
-        }
-    }, [])
     const [NumberOfComments, setNumberOfComments] = useState([])
-    const getTags = async () => {
-        const res = await axios.get('http://localhost:4000/post/' + post.id_post + '/tags')
-        setTags(res.data.tags);
+
+    const getPostTags = async () => {
+        const res = await getPostTagsService(post.id_post)
+        setTags(tagsAdapter(res))
     }
+
     const getNumberOfComments = async () => {
-        const res = await axios.get('http://localhost:4000/post/' + post.id_post + '/comments/number')
-        setNumberOfComments(res.data.numberOfComments);
+        const res = await getNumberOfCommentsService(post.id_post)
+        setNumberOfComments(numberOfCommentsAdapter(res));
     }
+
     useEffect(() => {
-        getTags()
+        setTimeAgo(elapsedTime(post.created_at))
+        getPostTags()
         getNumberOfComments()
     }, [])
     return (

@@ -1,30 +1,12 @@
 import { useEffect, useState } from "react"
+import { elapsedTime } from "../../Utilities/format-elapsedTime.utility"
 
-const Answer = ({ comment }) => {
+
+const Comment = ({ comment }) => {
     const [timeAgo, setTimeAgo] = useState("")
+
     useEffect(() => {
-        const now = new Date();
-        const created_at = new Date(comment.created_at)
-
-        const seconds = Math.floor(((now - created_at) / 1000))
-        const minutes = Math.floor(((now - created_at) / 1000) / 60)
-        const hours = Math.floor(((now - created_at) / 1000) / 3600)
-        const days = Math.floor(((now - created_at) / 1000) / 86400)
-        const weeks = Math.floor(((now - created_at) / 1000) / 604800)
-
-        if (weeks > 0) {
-            setTimeAgo(weeks + " weeks ago")
-        } else if (days > 0) {
-            setTimeAgo(days + " days ago")
-        } else if (hours > 0) {
-            setTimeAgo(hours + " hours ago")
-        } else if (minutes > 0) {
-            setTimeAgo(minutes + " minutes ago")
-        } else if (seconds > 0) {
-            setTimeAgo(seconds + " seconds ago")
-        } else {
-            setTimeAgo("now")
-        }
+        setTimeAgo(elapsedTime(comment.created_at))
     }, [])
 
     return (
@@ -59,4 +41,4 @@ const Answer = ({ comment }) => {
         </div>
     )
 }
-export default Answer
+export default Comment

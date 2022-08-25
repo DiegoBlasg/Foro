@@ -1,9 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Menu from './Components/Menu';
-import Home from './Components/Home/Home';
-import Profile from './Components/Profile';
-import Post from './Components/Post/Post';
-import NewPost from './Components/NewPost';
+import Home from './Pages/Home/Home';
+import Profile from './Pages/Profile/Profile';
+import Post from './Pages/Post/Post';
+import NewPost from './Pages/Profile/NewPost';
 import { useEffect, useState } from 'react';
 
 function App() {

@@ -1,18 +1,22 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import PostCard from "./PostCard";
+import { getPostsService, getTagsService } from '../../Services/post.service'
+import { postsAdapter, tagsAdapter } from "../../Adapters/post.adapter";
 
 const Home = () => {
     const [posts, setPosts] = useState([])
     const [tags, setTags] = useState([])
+
     const getPosts = async () => {
-        const res = await axios.get('http://localhost:4000/post')
-        setPosts(res.data.posts)
+        const res = await getPostsService()
+        setPosts(postsAdapter(res))
     }
+
     const getTags = async () => {
-        const res = await axios.get('http://localhost:4000/post/tags/all')
-        setTags(res.data.tags)
+        const res = await getTagsService()
+        setTags(tagsAdapter(res))
     }
+
     useEffect(() => {
         getPosts()
         getTags()

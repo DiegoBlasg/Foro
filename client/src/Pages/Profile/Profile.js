@@ -1,25 +1,27 @@
-import PostCard from "./Home/PostCard";
+import PostCard from "../Home/PostCard";
 import './animation.css'
 import { Link } from "react-router-dom";
-import useQueriesWithCredentials from "./useQueriesWithCredentials";
 import { useEffect, useState } from "react";
 import CommentCard from "./CommentCard";
+import { getUserCommentsService, getUserPostsService } from "../../Services/user.service";
+import { postsAdapter } from "../../Adapters/post.adapter";
+import { userCommentsAdapter } from "../../Adapters/comments.adapter";
 
 const Profile = ({ user }) => {
-    const { queryWithCredentials } = useQueriesWithCredentials()
     const [posts, setPosts] = useState([])
     const [comment, setComment] = useState([])
     const [choice, setChoice] = useState("")
     const [viewAnonymous, setViewAnonymous] = useState(false)
-    const getUserPosts = () => {
-        queryWithCredentials.get('http://localhost:4000/user/posts', (obj) => {
-            setPosts(obj.posts);
-        })
+
+    const getUserPosts = async () => {
+        const res = await getUserPostsService()
+        setPosts(postsAdapter(res))
+
     }
-    const getUserComments = () => {
-        queryWithCredentials.get('http://localhost:4000/user/comments', (obj) => {
-            setComment(obj.comments);
-        })
+    const getUserComments = async () => {
+        const res = await getUserCommentsService()
+        setComment(userCommentsAdapter(res))
+
     }
     useEffect(() => {
         getUserPosts()
