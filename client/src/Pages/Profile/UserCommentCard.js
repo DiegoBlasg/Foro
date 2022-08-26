@@ -24,7 +24,7 @@ const UserCommentCard = ({ comment }) => {
     }, [])
     return (
         <div className='flex items-center justify-center my-5'>
-            <Link to={`/post`} className="rounded-md border p-5 shadow-md w-full bg-white cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
+            <Link to={`/post/${comment.id_post}`} className="rounded-md p-5 shadow-md w-full bg-zinc-100 dark:bg-zinc-800 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
                 <div className="flex items-center justify-between space-x-3">
                     <div className="flex">
                         <div className="h-8 w-8 rounded-full">
@@ -42,7 +42,7 @@ const UserCommentCard = ({ comment }) => {
 
                         </div>
                         <div className="mx-2">
-                            <div className="text-md font-bold text-zinc-700">{post.is_anonymous ? 'Anonymous' : post.user_name}</div>
+                            <div className="text-md font-bold text-zinc-700 dark:text-zinc-300">{post.is_anonymous ? 'Anonymous' : post.user_name}</div>
                             <div className="text-xs font-bold text-zinc-500">{post._anonymous ? '' : post.email}</div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@ const UserCommentCard = ({ comment }) => {
                     <div className="flex items-center flex-wrap">
                         {
                             tags.map((tag) => (
-                                <button className={`rounded-2xl mb-2 mx-1 border bg-${tag.color}-600 text-white px-3 py-1 text-xs font-semibold`} key={tag.id_tag}>{tag.name}</button>
+                                <div className={`rounded-2xl mb-2 mx-1 text-white px-3 py-1 text-xs font-semibold`} style={{ backgroundColor: tag.color }} key={tag.id_tag}>{tag.name}</div>
                             ))
                         }
                     </div>
@@ -59,10 +59,10 @@ const UserCommentCard = ({ comment }) => {
                 <div className="mt-4 mx-4">
                     <div className="mb-3 text-lg font-bold text-center" style={{ wordWrap: "break-word" }}>{comment.title}</div>
                 </div>
-                <div className="bg-zinc-200 rounded mt-5 p-4">
+                <div className="bg-zinc-200 dark:bg-zinc-700 rounded mt-5 p-4">
                     <div className="mb-6">
                         <div className="mb-2 flex justify-between">
-                            <div className="flex text-lg font-bold text-zinc-700">
+                            <div className="flex text-lg font-bold text-zinc-700 dark:text-zinc-300">
                                 {
                                     comment.is_anonymous ?
                                         <>
@@ -79,7 +79,7 @@ const UserCommentCard = ({ comment }) => {
                                 <div className="text-xs text-neutral-500">{timeAgo}</div>
                             </div>
                         </div>
-                        <div className="text-sm text-neutral-600 px-4" style={{ wordWrap: "break-word" }}>{comment.content}</div>
+                        <div className="text-sm text-neutral-600 dark:text-zinc-400 px-4" style={{ wordWrap: "break-word" }}>{comment.content}</div>
                     </div>
 
                     <div>

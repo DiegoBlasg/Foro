@@ -13,7 +13,7 @@ const Comment = ({ comment }) => {
         <div>
             <div className="flex justify-between space-x-3 w-full">
                 <div className="flex items-center space-x-3">
-                    <div className="h-8 w-8 rounded-full">
+                    <div className="h-8 w-8 rounded-full dark:text-zinc-300">
                         {
                             comment.is_anonymous ?
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-incognito" viewBox="0 0 16 16">
@@ -24,7 +24,7 @@ const Comment = ({ comment }) => {
                         }
                     </div>
                     <div>
-                        <div className="text-lg font-bold text-zinc-700">{comment.is_anonymous ? 'Anonymous' : comment.user_name}</div>
+                        <div className="text-lg font-bold text-zinc-700 dark:text-zinc-300">{comment.is_anonymous ? 'Anonymous' : comment.user_name}</div>
                         <div className="text-xs font-bold text-zinc-500">{comment.is_anonymous ? '' : comment.email}</div>
                     </div>
                 </div>
@@ -35,8 +35,8 @@ const Comment = ({ comment }) => {
                     </div>
                 </div>
             </div>
-            <div className="mt-4 mb-6 border-b-2 border-zinc-300 py-3 pb-8">
-                <div className="text-md text-zinc-800 sm:px-5 px-2" style={{ wordWrap: "break-word" }}>{comment.content}</div>
+            <div className="mt-4 mb-6 border-b-2 dark:border-zinc-700 border-zinc-300 py-3 pb-8">
+                <div className="text-md text-zinc-800 sm:px-5 px-2 dark:text-zinc-300" style={{ wordWrap: "break-word" }}>{comment.content}</div>
             </div>
         </div>
     )
