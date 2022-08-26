@@ -57,7 +57,7 @@ const Post = () => {
                     <div className="flex flex-wrap flex-col items-start space-y-4 w-full pb-3 border-b dark:border-zinc-700">
                         <div className="flex justify-between space-x-3 w-full">
                             <div className="flex space-x-2 items-center">
-                                <div className="h-8 w-8 rounded-full">
+                                <div className="h-8 w-8 rounded-full dark:text-zinc-300">
                                     {
                                         post.is_anonymous ?
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-incognito" viewBox="0 0 16 16">

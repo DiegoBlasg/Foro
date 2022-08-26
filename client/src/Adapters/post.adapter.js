@@ -38,7 +38,15 @@ export const tagsAdapter = (tags) => {
     })
     return tagsAdapted
 }
-
+export const numberOfUserPostsAdapter = (posts) => {
+    return posts.data.numberOfPosts
+}
+export const numberOfUserCommentsAdapter = (comment) => {
+    return comment.data.numberOfComments
+}
+export const numberOfPostsAdapter = (posts) => {
+    return posts.data.numberOfPosts
+}
 export const numberOfCommentsAdapter = (comment) => {
     return comment.data.numberOfComments
 }

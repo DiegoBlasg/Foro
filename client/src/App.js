@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [themDark, setThemDark] = useState(false);
+  const [theme, setTheme] = useState(null);
   const getUser = () => {
     fetch("http://localhost:4000/auth/login/success", {
       method: "GET",
@@ -32,14 +32,24 @@ function App() {
   };
   useEffect(() => {
     getUser();
+    setTheme(localStorage.getItem('theme'))
+    if (!localStorage.getItem('theme')) {
+      localStorage.setItem('theme', theme);
+    }
   }, [])
+  useEffect(() => {
+    getUser();
+    if (theme) {
+      localStorage.setItem('theme', theme);
+    }
+  }, [theme])
   return (
-    <div className={themDark ? 'dark' : 'light'}>
+    <div className={theme}>
       <BrowserRouter>
-        <Menu user={user} setThemDark={setThemDark} themDark={themDark} />
+        <Menu user={user} theme={theme} setTheme={setTheme} />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/profile" element={user ? <Profile user={user} setThemDark={setThemDark} themDark={themDark} /> : <Navigate to="/" />} />
+          <Route path="/profile" element={user ? <Profile user={user} theme={theme} setTheme={setTheme} /> : <Navigate to="/" />} />
           <Route path="/post/:id_post" element={user ? <Post user={user} /> : <Navigate to="/" />} />
           <Route path="/newpost" element={user ? <NewPost user={user} /> : <Navigate to="/" />} />
         </Routes>

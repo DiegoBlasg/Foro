@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { getPosts, getOnePost, newPost, getTags, getPostTags, newPostTags, getPostComments, newPostComment, getNumberOfCommentsOnAPost } = require('../Controllers/posts.controllers')
+const { getPosts, getNumberOfPost, getOnePost, newPost, getTags, getPostTags, newPostTags, getPostComments, newPostComment, getNumberOfCommentsOnAPost } = require('../Controllers/posts.controllers')
 
 router.route('/')
-    .get(getPosts)
     .post(newPost)
+
+router.route('/number')
+    .get(getNumberOfPost)
+
+router.route('/page/:pag')
+    .get(getPosts)
 
 router.route('/:id_post')
     .get(getOnePost)
@@ -18,6 +23,8 @@ router.route('/:post_id/tags')
 
 router.route('/:post_id/comments')
     .get(getPostComments)
+
+router.route('/:post_id/comments')
     .post(newPostComment)
 
 router.route('/:post_id/comments/number')

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { createdPostIdAdapter, tagsAdapter } from '../Adapters/post.adapter';
 import TagToSelect from '../Components/TagToSelect';
-import { getTagsService, newPostService, newTagService } from '../Services/post.service';
+import { getTagsService, newPostService, newPostTagService } from '../Services/post.service';
 import GlobalDiv from '../Styled-components/GlobalDiv';
 import LayoutDiv from '../Styled-components/LayoutDiv';
 
@@ -24,7 +24,7 @@ const NewPost = () => {
         const tagsData = {
             tags: tagsIncluded
         }
-        await newTagService(postId, tagsData)
+        await newPostTagService(postId, tagsData)
         navigate("/");
 
     }

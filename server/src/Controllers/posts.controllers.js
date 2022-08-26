@@ -9,14 +9,25 @@ contractsCtrl.getPosts = async (req, res) => {
         IF (p.is_anonymous = true, null, u.email) as email,
         IF (p.is_anonymous = true, null, u.user_image) as user_image,
         id_post, title, description, is_anonymous, created_at
-        FROM posts p LEFT JOIN users u ON u.email = p.email`;
-
-        const rows = await pool.query(sql);
+        FROM posts p LEFT JOIN users u ON u.email = p.email
+        ORDER BY p.created_at DESC, p.id_post DESC
+        LIMIT ?, 10`;
+        const rows = await pool.query(sql, parseInt(req.params.pag));
         res.status(200).json({ posts: rows });
     } catch (error) {
         res.status(400).send(error.message)
     }
 }
+contractsCtrl.getNumberOfPost = async (req, res) => {
+    try {
+        const sql = `SELECT COUNT(id_post) as post FROM posts`;
+        const rows = await pool.query(sql);
+        res.status(200).json({ numberOfPosts: rows[0].post.toString() });
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
 contractsCtrl.getOnePost = async (req, res) => {
     try {
         const sql = `

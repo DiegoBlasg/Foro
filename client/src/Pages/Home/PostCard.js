@@ -7,7 +7,7 @@ import { elapsedTime } from "../../Utilities/format-elapsedTime.utility"
 const PostCard = ({ post }) => {
     const [tags, setTags] = useState([])
     const [timeAgo, setTimeAgo] = useState("")
-    const [NumberOfComments, setNumberOfComments] = useState([])
+    const [NumberOfComments, setNumberOfComments] = useState(0)
 
     const getPostTags = async () => {
         const res = await getPostTagsService(post.id_post)
