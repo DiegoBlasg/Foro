@@ -2,10 +2,11 @@ import PostCard from "../Home/PostCard";
 import './animation.css'
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import CommentCard from "./CommentCard";
+import UserCommentCard from "./UserCommentCard";
 import { getUserCommentsService, getUserPostsService } from "../../Services/user.service";
-import { postsAdapter } from "../../Adapters/post.adapter";
-import { userCommentsAdapter } from "../../Adapters/comments.adapter";
+import { commentsAdapter, postsAdapter } from "../../Adapters/post.adapter";
+import GlobalDiv from "../../Styled-components/GlobalDiv";
+import LayoutDiv from "../../Styled-components/LayoutDiv";
 
 const Profile = ({ user }) => {
     const [posts, setPosts] = useState([])
@@ -20,7 +21,7 @@ const Profile = ({ user }) => {
     }
     const getUserComments = async () => {
         const res = await getUserCommentsService()
-        setComment(userCommentsAdapter(res))
+        setComment(commentsAdapter(res))
 
     }
     useEffect(() => {
@@ -28,11 +29,9 @@ const Profile = ({ user }) => {
         getUserComments()
     }, [])
     return (
-        <div>
-            <div className='bg-zinc-300 fixed w-full h-full -z-10'></div>
-            <div className='flex flex-col items-center pt-20 sm:mt-18'>
-
-                <div className="rounded-md shadow-md mt-16 w-full lg:w-8/12 md:w-10/12 bg-white">
+        <GlobalDiv>
+            <LayoutDiv>
+                <div className="rounded-md shadow-md mt-16 w-full bg-white">
                     <div className="flex flex-col justify-center">
                         <div className="flex justify-center">
                             <img src={user.photos[0].value}
@@ -64,8 +63,9 @@ const Profile = ({ user }) => {
                         </div>
                     </div>
                 </div>
-
-                <div className="flex mt-4 -mb-1 shadow-md w-full lg:w-8/12 md:w-10/12">
+            </LayoutDiv>
+            <LayoutDiv>
+                <div className="flex mt-4 -mb-1 shadow-md w-full">
                     <div className={`rounded-l-md flex justify-center items-center flex-col sm:flex-row cursor-pointer border border-zinc-300 w-full bg-zinc-${choice === "post" ? "300" : "200"} hover:bg-zinc-300 text-zinc-700 font-semibold py-2`} onClick={() => setChoice("post")}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-file-post mx-2" viewBox="0 0 16 16">
                             <path d="M4 3.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-8z" />
@@ -89,7 +89,7 @@ const Profile = ({ user }) => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-bell-fill" viewBox="0 0 16 16">
                                 <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
                             </svg>
-    </div>*/}
+                    </div>*/}
                     </div>
                     <div className="hidden rounded-r-md sm:flex justify-center items-center flex-col sm:flex-row cursor-pointer border border-zinc-300 w-full bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-semibold py-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-brightness-high mx-2" viewBox="0 0 16 16">
@@ -102,29 +102,29 @@ const Profile = ({ user }) => {
                             Dark Mode*/}
                     </div>
                 </div>
-            </div >
-            <div className="flex justify-center mt-4">
-                <div className={`${viewAnonymous ? 'bg-red-600 text-zinc-300' : 'text-zinc-800'} cursor-pointer rounded-full p-1`} onClick={() => setViewAnonymous(!viewAnonymous)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-incognito" viewBox="0 0 16 16">
-                        <path fillRule="evenodd" d="m4.736 1.968-.892 3.269-.014.058C2.113 5.568 1 6.006 1 6.5 1 7.328 4.134 8 8 8s7-.672 7-1.5c0-.494-1.113-.932-2.83-1.205a1.032 1.032 0 0 0-.014-.058l-.892-3.27c-.146-.533-.698-.849-1.239-.734C9.411 1.363 8.62 1.5 8 1.5c-.62 0-1.411-.136-2.025-.267-.541-.115-1.093.2-1.239.735Zm.015 3.867a.25.25 0 0 1 .274-.224c.9.092 1.91.143 2.975.143a29.58 29.58 0 0 0 2.975-.143.25.25 0 0 1 .05.498c-.918.093-1.944.145-3.025.145s-2.107-.052-3.025-.145a.25.25 0 0 1-.224-.274ZM3.5 10h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Zm-1.5.5c0-.175.03-.344.085-.5H2a.5.5 0 0 1 0-1h3.5a1.5 1.5 0 0 1 1.488 1.312 3.5 3.5 0 0 1 2.024 0A1.5 1.5 0 0 1 10.5 9H14a.5.5 0 0 1 0 1h-.085c.055.156.085.325.085.5v1a2.5 2.5 0 0 1-5 0v-.14l-.21-.07a2.5 2.5 0 0 0-1.58 0l-.21.07v.14a2.5 2.5 0 0 1-5 0v-1Zm8.5-.5h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Z" />
-                    </svg>
+            </LayoutDiv>
+            <LayoutDiv>
+                <div className="flex justify-center mt-4">
+                    <div className={`${viewAnonymous ? 'bg-red-600 text-zinc-300' : 'text-zinc-800'} cursor-pointer rounded-full p-1`} onClick={() => setViewAnonymous(!viewAnonymous)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-incognito" viewBox="0 0 16 16">
+                            <path fillRule="evenodd" d="m4.736 1.968-.892 3.269-.014.058C2.113 5.568 1 6.006 1 6.5 1 7.328 4.134 8 8 8s7-.672 7-1.5c0-.494-1.113-.932-2.83-1.205a1.032 1.032 0 0 0-.014-.058l-.892-3.27c-.146-.533-.698-.849-1.239-.734C9.411 1.363 8.62 1.5 8 1.5c-.62 0-1.411-.136-2.025-.267-.541-.115-1.093.2-1.239.735Zm.015 3.867a.25.25 0 0 1 .274-.224c.9.092 1.91.143 2.975.143a29.58 29.58 0 0 0 2.975-.143.25.25 0 0 1 .05.498c-.918.093-1.944.145-3.025.145s-2.107-.052-3.025-.145a.25.25 0 0 1-.224-.274ZM3.5 10h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Zm-1.5.5c0-.175.03-.344.085-.5H2a.5.5 0 0 1 0-1h3.5a1.5 1.5 0 0 1 1.488 1.312 3.5 3.5 0 0 1 2.024 0A1.5 1.5 0 0 1 10.5 9H14a.5.5 0 0 1 0 1h-.085c.055.156.085.325.085.5v1a2.5 2.5 0 0 1-5 0v-.14l-.21-.07a2.5 2.5 0 0 0-1.58 0l-.21.07v.14a2.5 2.5 0 0 1-5 0v-1Zm8.5-.5h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Z" />
+                        </svg>
+                    </div>
                 </div>
-            </div>
 
-            {
-                choice === "post" ?
-                    posts.slice().reverse().map((post) => {
-                        if (viewAnonymous || !post.is_anonymous) return <PostCard key={post.id_post} post={post} />
-                    })
-                    :
-                    choice === "comment" ?
-                        comment.slice().reverse().map((com) => {
-                            if (viewAnonymous || !com.comment_is_anonymous) return <CommentCard key={com.id_comment} comment={com} />
+                {
+                    choice === "post" ?
+                        posts.slice().reverse().map((post) => {
+                            if (viewAnonymous || !post.is_anonymous) return <PostCard key={post.id_post} post={post} />
                         })
                         :
-                        <></>
-            }
-        </div >
+                        choice === "comment" &&
+                        comment.slice().reverse().map((com) => {
+                            if (viewAnonymous || !com.is_anonymous) return <UserCommentCard key={com.id_comment} comment={com} />
+                        })
+                }
+            </LayoutDiv>
+        </GlobalDiv>
     );
 }
 export default Profile

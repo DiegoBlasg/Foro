@@ -4,6 +4,8 @@ import Comment from "./Comment"
 import { getPostCommentsService, getPostTagsService, getSinglePostService, newCommentService } from "../../Services/post.service"
 import { commentsAdapter, singlePostAdapter, tagsAdapter } from "../../Adapters/post.adapter"
 import { elapsedTime } from "../../Utilities/format-elapsedTime.utility"
+import GlobalDiv from "../../Styled-components/GlobalDiv"
+import LayoutDiv from "../../Styled-components/LayoutDiv"
 
 const Post = () => {
     const postId = useParams().id_post
@@ -49,11 +51,9 @@ const Post = () => {
         getPostTags()
     }, [])
     return (
-        <div>
-            <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
-
-            <div className='flex items-center justify-center pt-20 sm:mt-18'>
-                <div className="rounded-md border p-5 shadow-md w-full md:w-10/12 bg-white">
+        <GlobalDiv>
+            <LayoutDiv>
+                <div className="rounded-md border p-5 shadow-md w-full bg-white">
                     <div className="flex flex-wrap flex-col items-start space-y-4 w-full pb-3 border-b">
                         <div className="flex justify-between space-x-3 w-full">
                             <div className="flex space-x-2 items-center">
@@ -64,7 +64,7 @@ const Post = () => {
                                                 <path fillRule="evenodd" d="m4.736 1.968-.892 3.269-.014.058C2.113 5.568 1 6.006 1 6.5 1 7.328 4.134 8 8 8s7-.672 7-1.5c0-.494-1.113-.932-2.83-1.205a1.032 1.032 0 0 0-.014-.058l-.892-3.27c-.146-.533-.698-.849-1.239-.734C9.411 1.363 8.62 1.5 8 1.5c-.62 0-1.411-.136-2.025-.267-.541-.115-1.093.2-1.239.735Zm.015 3.867a.25.25 0 0 1 .274-.224c.9.092 1.91.143 2.975.143a29.58 29.58 0 0 0 2.975-.143.25.25 0 0 1 .05.498c-.918.093-1.944.145-3.025.145s-2.107-.052-3.025-.145a.25.25 0 0 1-.224-.274ZM3.5 10h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Zm-1.5.5c0-.175.03-.344.085-.5H2a.5.5 0 0 1 0-1h3.5a1.5 1.5 0 0 1 1.488 1.312 3.5 3.5 0 0 1 2.024 0A1.5 1.5 0 0 1 10.5 9H14a.5.5 0 0 1 0 1h-.085c.055.156.085.325.085.5v1a2.5 2.5 0 0 1-5 0v-.14l-.21-.07a2.5 2.5 0 0 0-1.58 0l-.21.07v.14a2.5 2.5 0 0 1-5 0v-1Zm8.5-.5h2a.5.5 0 0 1 .5.5v1a1.5 1.5 0 0 1-3 0v-1a.5.5 0 0 1 .5-.5Z" />
                                             </svg>
                                             :
-                                            <img src={post.image} alt="" className='rounded-full' />
+                                            <img src={post.user_image} alt="" className='rounded-full' />
                                     }
 
 
@@ -92,29 +92,27 @@ const Post = () => {
 
                     <div className="mt-4 mb-6 border-b py-3">
                         <div className="mb-3 text-3xl font-bold text-center pb-6 border-b" style={{ wordWrap: "break-word" }}>{post.title}</div>
-                        <div className="text-md text-zinc-600 sm:px-5 px-2" style={{ wordWrap: "break-word" }}>{post.description}</div>
+                        <div className="text-md text-zinc-600 px-2" style={{ wordWrap: "break-word" }}>{post.description}</div>
                     </div>
 
                 </div>
-            </div>
+            </LayoutDiv>
 
-            <div className='flex items-center justify-center pt-2 border-b'>
-                <div className="rounded-md border p-5 shadow-md  w-full md:w-10/12 bg-white">
-                    <div className="mb-6 pb-6 border-b">
-                        <div className="text-xl font-bold text-zinc-900 sm:px-5 px-2">Comments</div>
-                    </div>
+            <LayoutDiv>
+                <div className="rounded-md p-5 shadow-md w-full bg-white mt-3">
+                    <div className="mb-6 pb-6 border-b text-xl font-bold text-zinc-900 px-2">Comments</div>
                     {
                         comments.map((com) => (
                             <Comment key={com.id_comment} comment={com} />
                         ))
                     }
                 </div>
-            </div >
+            </LayoutDiv>
 
-            <div className='flex items-center justify-center pt-2 pb-4'>
-                <div className="rounded-md border p-5 shadow-md  w-full md:w-10/12 bg-white">
+            <LayoutDiv>
+                <div className="rounded-md border p-5 shadow-md  w-full bg-white my-3">
                     <div className="mb-6 pb-6 border-b">
-                        <div className="text-xl font-bold text-zinc-900 sm:px-5 px-2">Your Answer</div>
+                        <div className="text-xl font-bold text-zinc-900 px-2">Your Answer</div>
                     </div>
                     <div className="flex items-center justify-center">
                         <form className="flex flex-col bg-white w-full md:w-10/12">
@@ -180,8 +178,8 @@ const Post = () => {
                         </form>
                     </div>
                 </div>
-            </div >
-        </div >
+            </LayoutDiv>
+        </GlobalDiv>
     )
 }
 export default Post

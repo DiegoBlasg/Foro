@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import PostCard from "./PostCard";
 import { getPostsService, getTagsService } from '../../Services/post.service'
 import { postsAdapter, tagsAdapter } from "../../Adapters/post.adapter";
+import GlobalDiv from "../../Styled-components/GlobalDiv";
+import LayoutDiv from "../../Styled-components/LayoutDiv";
 
 const Home = () => {
     const [posts, setPosts] = useState([])
@@ -22,24 +24,20 @@ const Home = () => {
         getTags()
     }, [])
     return (
-        <div>
-            <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
-
-            <div className='flex items-center justify-center pt-20 sm:mt-18'>
-                <form className='flex justify-center w-full lg:w-8/12 md:w-10/12'>
-                    <div className="relative w-full shadow-md">
-                        <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                            <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <input type="text" id="simple-search" className="bg-zinc-100 text-zinc-800 text-sm rounded-lg w-full pl-10 p-3" placeholder="Search" required />
+        <GlobalDiv>
+            <LayoutDiv>
+                <div className="relative w-full shadow-md">
+                    <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                        <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
+                        </svg>
                     </div>
-                </form >
-            </div>
+                    <input type="text" id="simple-search" className="bg-zinc-100 text-zinc-800 text-sm rounded-lg w-full pl-10 p-3" placeholder="Search" required />
+                </div>
+            </LayoutDiv>
 
-            <div className='flex items-center justify-center my-5'>
-                <div className='bg-zinc-100 flex items-center justify-center w-full lg:w-8/12 md:w-10/12 py-2 shadow-md rounded-md'>
+            <LayoutDiv>
+                <div className='bg-zinc-100 flex items-center justify-center w-full py-2 shadow-md rounded-md mt-5'>
                     <ul className="flex flex-wrap">
                         {
                             tags.map((tag) => (
@@ -53,17 +51,17 @@ const Home = () => {
                         }
                     </ul>
                 </div>
-            </div>
+            </LayoutDiv>
 
-            <div>
+            <LayoutDiv>
                 {
                     posts.slice().reverse().map(post => (
                         <PostCard key={post.id_post} post={post} />
                     ))
                 }
-            </div>
+            </LayoutDiv>
 
-        </div >
+        </GlobalDiv>
     );
 }
 export default Home

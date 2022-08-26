@@ -3,7 +3,7 @@ import Menu from './Components/Menu';
 import Home from './Pages/Home/Home';
 import Profile from './Pages/Profile/Profile';
 import Post from './Pages/Post/Post';
-import NewPost from './Pages/Profile/NewPost';
+import NewPost from './Pages/NewPost';
 import { useEffect, useState } from 'react';
 
 function App() {

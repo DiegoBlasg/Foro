@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { createdPostIdAdapter, tagsAdapter } from '../../Adapters/post.adapter';
-import { getTagsService, newPostService, newTagService } from '../../Services/post.service';
+import { createdPostIdAdapter, tagsAdapter } from '../Adapters/post.adapter';
+import { getTagsService, newPostService, newTagService } from '../Services/post.service';
+import GlobalDiv from '../Styled-components/GlobalDiv';
+import LayoutDiv from '../Styled-components/LayoutDiv';
 
 const NewPost = () => {
     const [is_anonymous, setIs_anonymous] = useState(false)
@@ -44,11 +46,9 @@ const NewPost = () => {
     }, [])
 
     return (
-        <div>
-            <div className='bg-zinc-200 fixed w-full h-full -z-10'></div>
-
-            <div className='flex items-center justify-center pt-20 sm:mt-18 mb-4'>
-                <div className="rounded-md border p-5 shadow-md w-full lg:w-8/12 md:w-10/12 bg-white">
+        <GlobalDiv>
+            <LayoutDiv>
+                <div className="rounded-md border p-5 shadow-md w-full bg-white">
 
                     <div className="flex items-center justify-center mt-5">
                         <div className="flex justify-between  bg-white w-full sm:w-10/12">
@@ -141,8 +141,8 @@ const NewPost = () => {
                         </form>
                     </div>
                 </div>
-            </div >
-        </div >
+            </LayoutDiv>
+        </GlobalDiv>
     )
 }
 export default NewPost
