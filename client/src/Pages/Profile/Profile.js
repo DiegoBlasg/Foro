@@ -1,60 +1,13 @@
-import PostCard from "../Home/PostCard";
+import PostCard from "../../Components/PostCard";
 import './animation.css'
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import UserCommentCard from "./UserCommentCard";
-import { getNumberOfUserCommentsService, getNumberOfUserPostsService, getUserCommentsService, getUserPostsService } from "../../Services/user.service";
-import { commentsAdapter, numberOfUserCommentsAdapter, numberOfUserPostsAdapter, postsAdapter } from "../../Adapters/post.adapter";
 import GlobalDiv from "../../Styled-components/GlobalDiv";
 import LayoutDiv from "../../Styled-components/LayoutDiv";
+import useData from "./Hooks/useData";
 
 const Profile = ({ user, setTheme, theme }) => {
-    const [posts, setPosts] = useState([])
-    const [comment, setComment] = useState([])
-    const [choice, setChoice] = useState("")
-    const [viewAnonymous, setViewAnonymous] = useState(false)
-    const [postsBlocks, setPostsBlocks] = useState(0)
-    const [commentsBlocks, setCommentsBlocks] = useState(0)
-
-    const [numberOfUserPosts, setNumberOfUserPosts] = useState(0)
-    const [numberOfUserComments, setNumberOfUserComments] = useState(0)
-
-    const getUserPosts = async () => {
-        const res = await getUserPostsService()
-        setPosts(postsAdapter(res))
-
-    }
-    const getUserComments = async () => {
-        const res = await getUserCommentsService()
-        setComment(commentsAdapter(res))
-
-    }
-    const morePosts = async () => {
-        const res = await getUserPostsService(postsBlocks + 1)
-        setPostsBlocks(prev => prev + 1)
-        setPosts(prev => [...prev, ...postsAdapter(res)])
-    }
-    const moreComments = async () => {
-        const res = await getUserCommentsService(commentsBlocks + 1)
-        setCommentsBlocks(prev => prev + 1)
-        setComment(prev => [...prev, ...commentsAdapter(res)])
-    }
-    const getNumberOfUserPosts = async () => {
-        const res = await getNumberOfUserPostsService()
-        setNumberOfUserPosts(numberOfUserPostsAdapter(res))
-
-    }
-    const getNumberOfUserComments = async () => {
-        const res = await getNumberOfUserCommentsService()
-        setNumberOfUserComments(numberOfUserCommentsAdapter(res))
-
-    }
-    useEffect(() => {
-        getNumberOfUserPosts()
-        getNumberOfUserComments()
-        getUserPosts()
-        getUserComments()
-    }, [])
+    const { posts, userCommentInfo, choice, setChoice, viewAnonymous, setViewAnonymous, postsBlocks, commentsBlocks, numberOfUserPosts, numberOfUserComments, morePosts, moreComments } = useData()
     return (
         <GlobalDiv>
             <LayoutDiv>
@@ -172,12 +125,12 @@ const Profile = ({ user, setTheme, theme }) => {
                         choice === "comment" &&
                         <>
                             {
-                                comment.map((com) => {
-                                    if (viewAnonymous || !com.is_anonymous) return <UserCommentCard key={com.id_comment} comment={com} />
+                                userCommentInfo.map((commentInfo) => {
+                                    if (viewAnonymous || !commentInfo.is_anonymous) return <UserCommentCard key={commentInfo.id_comment} commentInfo={commentInfo} />
                                 })
                             }
                             {
-                                numberOfUserComments > comment.length &&
+                                numberOfUserComments > userCommentInfo.length &&
                                 <div className="my-5 flex justify-center">
                                     <div onClick={moreComments}
                                         className="flex items-center rounded-lg cursor-pointer bg-white border border-zinc-300 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-700 py-2 px-3 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600 dark:hover:text-white">

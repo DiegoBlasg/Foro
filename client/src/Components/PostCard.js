@@ -1,28 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getNumberOfCommentsService, getPostTagsService } from '../../Services/post.service';
-import { numberOfCommentsAdapter, tagsAdapter } from '../../Adapters/post.adapter';
-import { elapsedTime } from "../../Utilities/format-elapsedTime.utility"
+import { elapsedTime } from "../Utilities/format-elapsedTime.utility"
 
 const PostCard = ({ post }) => {
-    const [tags, setTags] = useState([])
     const [timeAgo, setTimeAgo] = useState("")
-    const [NumberOfComments, setNumberOfComments] = useState(0)
-
-    const getPostTags = async () => {
-        const res = await getPostTagsService(post.id_post)
-        setTags(tagsAdapter(res))
-    }
-
-    const getNumberOfComments = async () => {
-        const res = await getNumberOfCommentsService(post.id_post)
-        setNumberOfComments(numberOfCommentsAdapter(res));
-    }
 
     useEffect(() => {
         setTimeAgo(elapsedTime(post.created_at))
-        getPostTags()
-        getNumberOfComments()
     }, [])
     return (
         <div className='flex items-center justify-center mt-5'>
@@ -49,7 +33,7 @@ const PostCard = ({ post }) => {
 
                     <div className="flex items-center flex-wrap">
                         {
-                            tags.map((tag) => (
+                            post.tags.map((tag) => (
                                 <div className={`rounded-2xl mb-2 mx-1 text-zinc-100 px-3 py-1 text-xs font-semibold`} style={{ backgroundColor: tag.color }} key={tag.id_tag}>{tag.name}</div>
                             ))
                         }
@@ -68,7 +52,7 @@ const PostCard = ({ post }) => {
                                 <svg xmlns="http://www.w3.org/2000/svg" className="mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                                 </svg>
-                                <span>{NumberOfComments}</span>
+                                <span>{post.number_of_comments}</span>
                             </div>
                         </div>
                         <div className="flex space-x-4 md:space-x-8">

@@ -38,10 +38,7 @@ function App() {
     }
   }, [])
   useEffect(() => {
-    getUser();
-    if (theme) {
-      localStorage.setItem('theme', theme);
-    }
+    if (theme) localStorage.setItem('theme', theme);
   }, [theme])
   return (
     <div className={theme}>
@@ -55,8 +52,6 @@ function App() {
         </Routes>
       </BrowserRouter>
     </div>
-
-
   );
 }
 

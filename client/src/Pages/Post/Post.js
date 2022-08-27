@@ -1,55 +1,12 @@
-import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Comment from "./Comment"
-import { getPostCommentsService, getPostTagsService, getSinglePostService, newCommentService } from "../../Services/post.service"
-import { commentsAdapter, singlePostAdapter, tagsAdapter } from "../../Adapters/post.adapter"
-import { elapsedTime } from "../../Utilities/format-elapsedTime.utility"
 import GlobalDiv from "../../Styled-components/GlobalDiv"
 import LayoutDiv from "../../Styled-components/LayoutDiv"
+import useData from "./Hooks/useData"
 
 const Post = () => {
     const postId = useParams().id_post
-    const [comments, setComments] = useState([])
-    const [post, setPost] = useState({})
-    const [tags, setTags] = useState([])
-    const [is_anonymous, setIs_anonymous] = useState(false)
-    const [timeAgo, setTimeAgo] = useState("")
-
-    const getPostTags = async () => {
-        const res = await getPostTagsService(postId)
-        setTags(tagsAdapter(res))
-    }
-
-    const newComment = async () => {
-        const commentData = {
-            content: document.getElementById("commentContent").value,
-            is_anonymous: is_anonymous
-        }
-        await newCommentService(postId, commentData)
-        getPostComments()
-        document.getElementById("commentContent").value = ""
-    }
-
-    const getPostInfo = async () => {
-        const res = await getSinglePostService(postId)
-        setPost(singlePostAdapter(res))
-    }
-
-    const getPostComments = async () => {
-        const res = await getPostCommentsService(postId)
-        setComments(commentsAdapter(res))
-    }
-
-    useEffect(() => {
-        if (post) {
-            setTimeAgo(elapsedTime(post.created_at))
-        }
-    }, [post])
-    useEffect(() => {
-        getPostComments()
-        getPostInfo()
-        getPostTags()
-    }, [])
+    const { newComment, comments, post, tags, is_anonymous, timeAgo, setIs_anonymous } = useData(postId)
     return (
         <GlobalDiv>
             <LayoutDiv>
@@ -83,8 +40,9 @@ const Post = () => {
                         </div>
                         <div className="flex items-center flex-wrap">
                             {
-                                tags.map((tag) => (
-                                    <button className={`rounded-2xl mb-2 mx-1 border text-white px-3 py-1 text-xs font-semibold`} style={{ backgroundColor: tag.color }} key={tag.id_tag}>{tag.name}</button>
+                                post.tags &&
+                                post.tags.map((tag) => (
+                                    <div className={`rounded-2xl mb-2 mx-1 text-white px-3 py-1 text-xs font-semibold`} style={{ backgroundColor: tag.color }} key={tag.id_tag}>{tag.name}</div>
                                 ))
                             }
                         </div>

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { createdPostIdAdapter, tagsAdapter } from '../Adapters/post.adapter';
+import { createdPostIdAdapter } from '../Adapters/post.adapter';
+import { tagsAdapter } from '../Adapters/tags.adapter';
 import TagToSelect from '../Components/TagToSelect';
-import { getTagsService, newPostService, newPostTagService } from '../Services/post.service';
+import { newPostService, } from '../Services/post.service';
+import { getTagsService, newPostTagService } from '../Services/tags.service';
 import GlobalDiv from '../Styled-components/GlobalDiv';
 import LayoutDiv from '../Styled-components/LayoutDiv';
 

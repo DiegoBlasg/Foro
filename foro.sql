@@ -77,6 +77,7 @@ CREATE TABLE `posts` (
   `description` varchar(4000) NOT NULL,
   `is_anonymous` tinyint(1) NOT NULL,
   `created_at` datetime NOT NULL
+  `number_of_comments` int(11) NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
