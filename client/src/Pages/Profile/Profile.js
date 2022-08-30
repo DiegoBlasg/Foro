@@ -5,9 +5,12 @@ import UserCommentCard from "./UserCommentCard";
 import GlobalDiv from "../../Styled-components/GlobalDiv";
 import LayoutDiv from "../../Styled-components/LayoutDiv";
 import useData from "./Hooks/useData";
+import Loading from "../../Components/Loading";
 
 const Profile = ({ user, setTheme, theme }) => {
-    const { posts, userCommentInfo, choice, setChoice, viewAnonymous, setViewAnonymous, postsBlocks, commentsBlocks, numberOfUserPosts, numberOfUserComments, morePosts, moreComments } = useData()
+    const { posts, loading, userComments, choice, viewAnonymous, numberOfUserPosts, numberOfUserComments,
+        lastPostRef, lastCommentRef, setChoice, setViewAnonymous } = useData()
+
     return (
         <GlobalDiv>
             <LayoutDiv>
@@ -101,49 +104,45 @@ const Profile = ({ user, setTheme, theme }) => {
                 {
                     choice === "post" ?
                         <>
-                            {
-                                posts.map((post) => {
-                                    if (viewAnonymous || !post.is_anonymous) return <PostCard key={post.id_post} post={post} />
-                                })
-                            }
-                            {
-                                numberOfUserPosts > posts.length &&
-                                <div className="my-5 flex justify-center">
-                                    <div onClick={morePosts}
-                                        className="flex items-center rounded-lg cursor-pointer bg-white border border-zinc-300 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-700 py-2 px-3 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600 dark:hover:text-white">
-                                        More
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
-                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            }
+                            {posts.map((post, i) => {
+                                if (viewAnonymous || !post.is_anonymous) {
+                                    if (posts.length === i + 1) {
+                                        return <div ref={lastPostRef} className="mb-5" key={post.id_post} ><PostCard post={post} /></div>
+                                    } else {
+                                        return <div key={post.id_post}><PostCard post={post} /></div>
+                                    }
+                                } else {
+                                    if (posts.length === i + 1) {
+                                        return <div key={post.id_post} className="invisible" ref={lastPostRef} >a</div>
+                                    }
+                                }
+                            })}
                         </>
 
 
                         :
                         choice === "comment" &&
                         <>
-                            {
-                                userCommentInfo.map((commentInfo) => {
-                                    if (viewAnonymous || !commentInfo.is_anonymous) return <UserCommentCard key={commentInfo.id_comment} commentInfo={commentInfo} />
-                                })
-                            }
-                            {
-                                numberOfUserComments > userCommentInfo.length &&
-                                <div className="my-5 flex justify-center">
-                                    <div onClick={moreComments}
-                                        className="flex items-center rounded-lg cursor-pointer bg-white border border-zinc-300 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-700 py-2 px-3 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600 dark:hover:text-white">
-                                        More
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
-                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            }
+                            {userComments.map((commentInfo, i) => {
+                                if (viewAnonymous || !commentInfo.is_anonymous) {
+                                    if (userComments.length === i + 1) {
+                                        return <div ref={lastCommentRef} className="mb-5" key={commentInfo.id_comment} ><UserCommentCard commentInfo={commentInfo} /></div>
+                                    } else {
+                                        return <div key={commentInfo.id_comment}><UserCommentCard commentInfo={commentInfo} /></div>
+                                    }
+                                } else {
+                                    if (userComments.length === i + 1) {
+                                        return <div key={commentInfo.id_comment} className="invisible" ref={lastCommentRef} >a</div>
+                                    }
+                                }
+                            })}
                         </>
                 }
             </LayoutDiv>
+            {
+                loading && <Loading />
+            }
+
         </GlobalDiv>
     );
 }

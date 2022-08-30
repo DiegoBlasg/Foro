@@ -17,15 +17,6 @@ contractsCtrl.getPostComments = async (req, res) => {
         res.status(400).send(error.message)
     }
 }
-contractsCtrl.getNumberOfCommentsOnAPost = async (req, res) => {
-    try {
-        const sql = "SELECT COUNT(id_comment) as comments FROM comments WHERE id_post = ?";
-        const rows = await pool.query(sql, parseInt(req.params.post_id));
-        res.status(200).json({ numberOfComments: rows[0].comments.toString() });
-    } catch (error) {
-        res.status(400).send(error.message)
-    }
-}
 contractsCtrl.newPostComment = async (req, res) => {
     try {
         const { content, is_anonymous } = req.body;

@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const TagToSelect = ({ tag, tagsIncluded, setTagsIncluded }) => {
+const TagToSelect = ({ tag, tagsIncluded, setTagsIncluded, setTagFilter, tagFilter }) => {
     const [selected, setSelected] = useState(false)
 
     return (
@@ -10,13 +10,13 @@ const TagToSelect = ({ tag, tagsIncluded, setTagsIncluded }) => {
                     <div
                         className={`inline-flex justify-between items-center px-2 mx-3 rounded-lg border-2 cursor-pointer`}
                         style={{ backgroundColor: tag.color, borderColor: tag.color, color: "#fff" }}
-                        onClick={() => { setSelected(false); tagsIncluded && setTagsIncluded(tagsIncluded.filter((tag2) => tag2 != tag.id_tag)) }}>
+                        onClick={() => { setSelected(false); tagsIncluded && setTagsIncluded(tagsIncluded.filter((tag2) => tag2 != tag.id_tag)); tagFilter && setTagFilter(tagFilter.filter((tag_id) => tag.id_tag != tag_id)) }}>
                         <h1>{tag.name}</h1>
                     </div>
                     :
                     <div
                         className={`inline-flex justify-between items-center px-2 mx-3 text-zinc-600 dark:text-zinc-400 rounded-lg border-2 border-zinc-200 dark:border-zinc-700 cursor-pointer hover:text-zinc-800`}
-                        onClick={() => { setSelected(true); tagsIncluded && setTagsIncluded([...tagsIncluded, tag.id_tag]) }}>
+                        onClick={() => { setSelected(true); tagsIncluded && setTagsIncluded([...tagsIncluded, tag.id_tag]); tagFilter && setTagFilter([...tagFilter, tag.id_tag]) }}>
                         <h1>{tag.name}</h1>
                     </div>
 

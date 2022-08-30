@@ -1,10 +1,13 @@
 import PostCard from "../../Components/PostCard";
 import GlobalDiv from "../../Styled-components/GlobalDiv";
 import LayoutDiv from "../../Styled-components/LayoutDiv";
+import TagToSelect from "../../Components/TagToSelect"
 import useData from "./Hooks/useData";
+import Loading from "../../Components/Loading";
 
 const Home = () => {
-    const { morePosts, posts, numberOfPosts, setSearch } = useData()
+    const { lastElementRef, setSearch, setTagFilter, tagFilter, loading, posts, tags } = useData()
+
     return (
         <GlobalDiv>
             <LayoutDiv>
@@ -18,25 +21,33 @@ const Home = () => {
                 </div>
             </LayoutDiv>
             <LayoutDiv>
+                <div className='bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center w-full py-2 shadow-md rounded-md mt-5'>
+                    <ul className="flex flex-wrap">
+                        {
+                            tags.map((tag) => (
+                                <div key={tag.id_tag}>
+                                    <TagToSelect tag={tag} tagFilter={tagFilter} setTagFilter={setTagFilter} />
+                                </div>
+                            ))
+                        }
+                    </ul>
+                </div>
+            </LayoutDiv>
+            <LayoutDiv>
                 {
-                    posts.map(post => (
-                        <PostCard key={post.id_post} post={post} />
+                    posts.map((post, i) => (
+                        posts.length === i + 1 ?
+                            <div ref={lastElementRef} className="mb-5" key={post.id_post} ><PostCard post={post} /></div>
+                            :
+                            <div key={post.id_post}><PostCard post={post} /></div>
                     ))
                 }
             </LayoutDiv>
             {
-                numberOfPosts > posts.length &&
-                <div className="my-5 flex justify-center">
-                    <div onClick={morePosts}
-                        className="flex items-center rounded-lg cursor-pointer bg-white border border-zinc-300 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-700 py-2 px-3 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600 dark:hover:text-white">
-                        More
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
-                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                        </svg>
-                    </div>
-                </div>
+                loading && <Loading />
             }
         </GlobalDiv >
+
     );
 }
 export default Home
