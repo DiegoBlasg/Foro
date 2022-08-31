@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { getPostComments, newPostComment, getUserComments, getNumberOfUserComments, getReplyComments } = require('../Controllers/comments.controllers')
+const { deleteComments, updateComment, getPostComments, newPostComment, getUserComments, getNumberOfUserComments, getReplyComments } = require('../Controllers/comments.controllers')
 
+
+router.route('/')
+    .delete(deleteComments)
+    .put(updateComment)
 
 router.route('/post/:post_id')
     .get(getPostComments)

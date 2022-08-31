@@ -6,7 +6,7 @@ import useData from "./Hooks/useData"
 
 const Post = () => {
     const postId = useParams().id_post
-    const { newComment, comments, post, tags, is_anonymous, timeAgo, setIs_anonymous } = useData(postId)
+    const { newComment, getPostComments, comments, post, tags, is_anonymous, timeAgo, setIs_anonymous } = useData(postId)
     return (
         <GlobalDiv>
             <LayoutDiv>
@@ -61,7 +61,7 @@ const Post = () => {
                     <div className="mb-6 pb-6 border-b dark:border-zinc-700 dark:text-zinc-100 text-xl font-bold text-zinc-900 px-2">Comments</div>
                     {
                         comments.map((com) => (
-                            <Comment key={com.id_comment} comment={com} />
+                            <Comment key={com.id_comment} comment={com} getPostComments={getPostComments} />
                         ))
                     }
                 </div>

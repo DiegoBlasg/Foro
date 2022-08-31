@@ -10,6 +10,13 @@ export const getReplyCommentsService = async (id_comment) => {
     return await axios.get(apiUrl + `/parentcomment/${id_comment}`, { withCredentials: true })
 }
 
+export const updateCommentsService = async (id_comment, data) => {
+    return await axios.put(apiUrl + `?id_comment=${id_comment}`, data, { withCredentials: true })
+}
+export const deleteCommentsService = async (id_comment) => {
+    return await axios.delete(apiUrl + `?id_comment=${id_comment}`, { withCredentials: true })
+}
+
 export const newCommentService = async (id_post, data) => {
     return await axios.post(apiUrl + `/post/${id_post}`, data, { withCredentials: true })
 }

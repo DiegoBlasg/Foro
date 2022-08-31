@@ -40,6 +40,6 @@ const useData = (postId) => {
         getPostComments()
         getPostInfo()
     }, [])
-    return { newComment, comments, post, is_anonymous, timeAgo, setIs_anonymous }
+    return { newComment, getPostComments, comments, post, is_anonymous, timeAgo, setIs_anonymous }
 }
 export default useData

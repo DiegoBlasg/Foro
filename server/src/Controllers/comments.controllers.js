@@ -6,7 +6,7 @@ contractsCtrl.getPostComments = async (req, res) => {
     try {
         const sql = `
         SELECT c.id_comment, c.id_post, c.content, c.created_at, c.is_anonymous, c.parent_comment_id,
-	        IF (c.is_anonymous = true, null, u.email) as email,
+	        c.email,
 	        IF (c.is_anonymous = true, null, u.user_image) as user_image,
 	        IF (c.is_anonymous = true, null, u.user_name) as user_name
         FROM comments c LEFT JOIN users u ON c.email = u.email 
@@ -15,6 +15,7 @@ contractsCtrl.getPostComments = async (req, res) => {
         const response = rows.map((com) => {
             const USER_EMAIL = req.session.passport.user.emails[0].value
             com.is_owner = com.email == USER_EMAIL ? true : false
+            com.email = com.is_anonymous ? null : com.email
             return com
         })
         res.status(200).json({ comments: response });
@@ -22,11 +23,40 @@ contractsCtrl.getPostComments = async (req, res) => {
         res.status(400).send(error.message)
     }
 }
+
+
+
+
+contractsCtrl.deleteComments = async (req, res) => {
+    try {
+        const USER_EMAIL = req.session.passport.user.emails[0].value
+        const sql = `DELETE FROM comments WHERE id_comment = ? AND email = ?`;
+        await pool.query(sql, [parseInt(req.query.id_comment), USER_EMAIL]);
+        res.status(200).json({ message: "deleted" });
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+contractsCtrl.updateComment = async (req, res) => {
+    try {
+        const USER_EMAIL = req.session.passport.user.emails[0].value
+        const { content, is_anonymous } = req.body
+        const sql = `UPDATE comments SET content = ?, is_anonymous = ? WHERE id_comment = ? AND email = ?`;
+        await pool.query(sql, [content, is_anonymous, parseInt(req.query.id_comment), USER_EMAIL]);
+        res.status(200).json({ message: "updated" });
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+
+
+
 contractsCtrl.getReplyComments = async (req, res) => {
     try {
         const sql = `
         SELECT c.id_comment, c.id_post, c.content, c.created_at, c.is_anonymous, c.parent_comment_id,
-	        IF (c.is_anonymous = true, null, u.email) as email,
+	        c.email,
 	        IF (c.is_anonymous = true, null, u.user_image) as user_image,
 	        IF (c.is_anonymous = true, null, u.user_name) as user_name
         FROM comments c LEFT JOIN users u ON c.email = u.email 
@@ -35,6 +65,7 @@ contractsCtrl.getReplyComments = async (req, res) => {
         const response = rows.map((com) => {
             const USER_EMAIL = req.session.passport.user.emails[0].value
             com.is_owner = com.email == USER_EMAIL ? true : false
+            com.email = com.is_anonymous ? null : com.email
             return com
         })
 

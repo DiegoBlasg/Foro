@@ -1,0 +1,29 @@
+.deletemodal {
+    animation: deletemodalanim 0.1s linear;
+}
+
+/* Here we define our animation with the name "rotate" */
+@keyframes deletemodalanim {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.commentinit {
+    animation: commentinitanim 0.1s linear;
+}
+
+/* Here we define our animation with the name "rotate" */
+@keyframes commentinitanim {
+    0% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
