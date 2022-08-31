@@ -24,7 +24,8 @@ CREATE TABLE `comments` (
   `content` varchar(4000) NOT NULL,
   `created_at` datetime NOT NULL,
   `email` varchar(100) NOT NULL,
-  `is_anonymous` tinyint(1) NOT NULL
+  `is_anonymous` tinyint(1) NOT NULL,
+  `parent_comment_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -125,8 +126,9 @@ CREATE TABLE `users` (
 --
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`id_comment`),
-  ADD KEY `id_post` (`id_post`,`email`),
+  ADD KEY `id_post` (`id_post`,`email`,`parent_comment_id`),
   ADD KEY `email` (`email`);
+  ADD KEY `parent_comment_id` (`parent_comment_id`);
 
 --
 -- Indices de la tabla `files`
@@ -210,6 +212,7 @@ ALTER TABLE `tags`
 ALTER TABLE `comments`
   ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`id_post`) REFERENCES `posts` (`id_post`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `comments_ibfk_3` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id_comment`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `files`

@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { getPostComments, newPostComment, getUserComments, getNumberOfUserComments } = require('../Controllers/comments.controllers')
+const { getPostComments, newPostComment, getUserComments, getNumberOfUserComments, getReplyComments } = require('../Controllers/comments.controllers')
 
 
-router.route('/post/:post_id/')
+router.route('/post/:post_id')
     .get(getPostComments)
     .post(newPostComment)
+
+router.route('/parentcomment/:comment_id')
+    .get(getReplyComments)
 
 router.route('/user')
     .get(getUserComments)

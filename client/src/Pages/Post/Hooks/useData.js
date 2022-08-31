@@ -14,7 +14,8 @@ const useData = (postId) => {
     const newComment = async () => {
         const commentData = {
             content: document.getElementById("commentContent").value,
-            is_anonymous: is_anonymous
+            is_anonymous: is_anonymous,
+            parent_comment_id: null
         }
         await newCommentService(postId, commentData)
         getPostComments()

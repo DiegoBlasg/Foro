@@ -3,7 +3,11 @@ import axios from "axios";
 const apiUrl = 'http://localhost:4000/comments';
 
 export const getPostCommentsService = async (id_post) => {
-    return await axios.get(apiUrl + `/post/${id_post}`)
+    return await axios.get(apiUrl + `/post/${id_post}`, { withCredentials: true })
+}
+
+export const getReplyCommentsService = async (id_comment) => {
+    return await axios.get(apiUrl + `/parentcomment/${id_comment}`, { withCredentials: true })
 }
 
 export const newCommentService = async (id_post, data) => {

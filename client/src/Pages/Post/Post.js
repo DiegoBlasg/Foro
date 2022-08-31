@@ -131,7 +131,7 @@ const Post = () => {
                                     </svg>
                                 </div>
 
-                                <div className="cursor-pointer bg-red-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-red-500" onClick={newComment} >Post</div>
+                                <div className="cursor-pointer bg-red-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-red-500" onClick={() => { if (document.getElementById("commentContent").value != "") newComment() }} >Post</div>
                             </div>
                         </form>
                     </div>

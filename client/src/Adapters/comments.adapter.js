@@ -16,7 +16,8 @@ export const commentsAdapter = (comments) => {
             id_post: com.id_post,
             is_anonymous: com.is_anonymous,
             user_image: com.user_image,
-            user_name: com.user_name
+            user_name: com.user_name,
+            is_owner: com.is_owner
         }
     })
     return postsAdapted

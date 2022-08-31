@@ -5,23 +5,49 @@ const contractsCtrl = {};
 contractsCtrl.getPostComments = async (req, res) => {
     try {
         const sql = `
-        SELECT c.id_comment, c.id_post, c.content, c.created_at, c.is_anonymous,
+        SELECT c.id_comment, c.id_post, c.content, c.created_at, c.is_anonymous, c.parent_comment_id,
 	        IF (c.is_anonymous = true, null, u.email) as email,
 	        IF (c.is_anonymous = true, null, u.user_image) as user_image,
 	        IF (c.is_anonymous = true, null, u.user_name) as user_name
         FROM comments c LEFT JOIN users u ON c.email = u.email 
-        WHERE id_post = ?`;
+        WHERE c.parent_comment_id IS NULL AND id_post = ?`;
         const rows = await pool.query(sql, parseInt(req.params.post_id));
-        res.status(200).json({ comments: rows });
+        const response = rows.map((com) => {
+            const USER_EMAIL = req.session.passport.user.emails[0].value
+            com.is_owner = com.email == USER_EMAIL ? true : false
+            return com
+        })
+        res.status(200).json({ comments: response });
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+contractsCtrl.getReplyComments = async (req, res) => {
+    try {
+        const sql = `
+        SELECT c.id_comment, c.id_post, c.content, c.created_at, c.is_anonymous, c.parent_comment_id,
+	        IF (c.is_anonymous = true, null, u.email) as email,
+	        IF (c.is_anonymous = true, null, u.user_image) as user_image,
+	        IF (c.is_anonymous = true, null, u.user_name) as user_name
+        FROM comments c LEFT JOIN users u ON c.email = u.email 
+        WHERE parent_comment_id = ?`;
+        const rows = await pool.query(sql, parseInt(req.params.comment_id));
+        const response = rows.map((com) => {
+            const USER_EMAIL = req.session.passport.user.emails[0].value
+            com.is_owner = com.email == USER_EMAIL ? true : false
+            return com
+        })
+
+        res.status(200).json({ comments: response });
     } catch (error) {
         res.status(400).send(error.message)
     }
 }
 contractsCtrl.newPostComment = async (req, res) => {
     try {
-        const { content, is_anonymous } = req.body;
-        const sql = "INSERT INTO comments (id_post, content, created_at, email, is_anonymous) VALUES(?,?,NOW(), ?, ?)";
-        const rows = await pool.query(sql, [parseInt(req.params.post_id), content, req.session.passport.user.emails[0].value, is_anonymous]);
+        const { content, is_anonymous, parent_comment_id } = req.body;
+        const sql = "INSERT INTO comments (id_post, content, created_at, email, is_anonymous, parent_comment_id) VALUES(?,?,NOW(), ?, ?, ?)";
+        const rows = await pool.query(sql, [parseInt(req.params.post_id), content, req.session.passport.user.emails[0].value, is_anonymous, parent_comment_id]);
         const sql2 = "UPDATE posts p SET p.number_of_comments = p.number_of_comments+1 WHERE p.id_post = ?";
         await pool.query(sql2, parseInt(req.params.post_id));
         res.status(200).json({ comment_id: rows.insertId.toString() });
@@ -50,7 +76,7 @@ contractsCtrl.getUserComments = async (req, res) => {
         }
         const POSTS_PER_PAGE = 10
         const sql = `
-        SELECT c.id_comment, c.content, c.created_at, c.is_anonymous, c.id_post, 
+        SELECT c.id_comment, c.content, c.created_at, c.is_anonymous, c.id_post, c.parent_comment_id, 
         IF(c.is_anonymous = true, null, u.email) as email, 
         IF(c.is_anonymous = true, null, u.user_name) as user_name, 
         IF(c.is_anonymous = true, null, u.user_image) as user_image,
