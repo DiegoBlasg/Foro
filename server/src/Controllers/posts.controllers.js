@@ -1,10 +1,10 @@
 const pool = require('../database');
 
 const contractsCtrl = {};
+const POSTS_PER_PAGE = 10
 
 contractsCtrl.getPosts = async (req, res) => {
     try {
-        const POSTS_PER_PAGE = 10
         let string = ''
         if (req.query.tag && Array.isArray(req.query.tag)) {
             req.query.tag.map(tag_id => {
@@ -93,20 +93,40 @@ contractsCtrl.newPost = async (req, res) => {
 
 contractsCtrl.getUserPosts = async (req, res) => {
     try {
+        let string = ''
+        if (req.query.tag && Array.isArray(req.query.tag)) {
+            req.query.tag.map(tag_id => {
+                string = string + `p.id_post IN(
+                SELECT tp.id_post
+                FROM tags_posts tp
+                WHERE tp.id_tag = ${parseInt(tag_id)}) AND `
+            })
+        } else if (req.query.tag) {
+            string = `p.id_post IN(
+                SELECT tp.id_post
+                FROM tags_posts tp 
+                WHERE tp.id_tag = ${parseInt(req.query.tag)}) AND `
+        } else {
+            string =
+                '1=1 AND '
+        }
         const sql = `
         SELECT p.id_post, p.title, p.description, p.is_anonymous, p.created_at, p.number_of_comments,
         IF (p.is_anonymous = true, null, u.email) as email,
         IF (p.is_anonymous = true, null, u.user_image) as user_image,
         IF (p.is_anonymous = true, null, u.user_name) as user_name
         FROM posts p LEFT JOIN users u ON u.email = p.email 
-        WHERE u.email = ?
+        WHERE u.email = '${req.session.passport.user.emails[0].value}'
+            AND p.title LIKE '%${req.query.search || ''}%' 
+            AND ${string.substring(0, string.length - 5)}
         ORDER BY p.created_at DESC, p.id_post DESC
-        LIMIT ?, 10`;
-        const rows = await pool.query(sql, [req.session.passport.user.emails[0].value, parseInt(req.params.pag)]);
+        LIMIT ${req.query.page * POSTS_PER_PAGE}, ${POSTS_PER_PAGE}`;
+        const rows = await pool.query(sql);
+
         const sql2 = `
         SELECT tp.id_tag, tp.id_post, t.name, t.color 
         FROM tags_posts tp LEFT JOIN tags t ON tp.id_tag = t.id_tag`;
-        const rows2 = await pool.query(sql2, req.params.post_id);
+        const rows2 = await pool.query(sql2);
 
         const ress = rows.map(post => {
             post.tags = []

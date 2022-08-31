@@ -31,6 +31,24 @@ contractsCtrl.newPostComment = async (req, res) => {
 }
 contractsCtrl.getUserComments = async (req, res) => {
     try {
+        let string = ''
+        if (req.query.tag && Array.isArray(req.query.tag)) {
+            req.query.tag.map(tag_id => {
+                string = string + `p.id_post IN(
+                SELECT tp.id_post
+                FROM tags_posts tp
+                WHERE tp.id_tag = ${parseInt(tag_id)}) AND `
+            })
+        } else if (req.query.tag) {
+            string = `p.id_post IN(
+                SELECT tp.id_post
+                FROM tags_posts tp 
+                WHERE tp.id_tag = ${parseInt(req.query.tag)}) AND `
+        } else {
+            string =
+                '1=1 AND '
+        }
+        const POSTS_PER_PAGE = 10
         const sql = `
         SELECT c.id_comment, c.content, c.created_at, c.is_anonymous, c.id_post, 
         IF(c.is_anonymous = true, null, u.email) as email, 
@@ -40,11 +58,13 @@ contractsCtrl.getUserComments = async (req, res) => {
         IF (p.is_anonymous = true, null, u.email) as post_email,
         IF (p.is_anonymous = true, null, u.user_image) as post_user_image,
         p.title, p.description, p.is_anonymous as post_is_anonymous, p.created_at as post_created_at
-        FROM comments c LEFT JOIN users u ON u.email = c.email LEFT JOIN posts p ON p.id_post = c.id_post 
-        WHERE u.email = ?
+        FROM comments c LEFT JOIN users u ON u.email = c.email 
+            LEFT JOIN posts p ON p.id_post = c.id_post 
+        WHERE u.email = '${req.session.passport.user.emails[0].value}'
+            AND (p.title LIKE '%${req.query.search || ''}%' OR c.content LIKE '%${req.query.search || ''}%') AND ${string.substring(0, string.length - 5)}
         ORDER BY c.created_at DESC, c.id_comment DESC
-        LIMIT ?, 10`;
-        const rows = await pool.query(sql, [req.session.passport.user.emails[0].value, parseInt(req.params.pag)]);
+        LIMIT ${parseInt(req.query.page * POSTS_PER_PAGE)}, ${POSTS_PER_PAGE}`;
+        const rows = await pool.query(sql);
 
         const sql2 = `
         SELECT tp.id_tag, tp.id_post, t.name, t.color 

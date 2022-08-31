@@ -9,7 +9,7 @@ router.route('/')
 router.route('/single/:id_post')
     .get(getSinglePost)
 
-router.route('/user/:pag')
+router.route('/user')
     .get(getUserPosts)
 
 router.route('/number/user')

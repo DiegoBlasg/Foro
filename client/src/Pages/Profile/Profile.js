@@ -6,11 +6,11 @@ import GlobalDiv from "../../Styled-components/GlobalDiv";
 import LayoutDiv from "../../Styled-components/LayoutDiv";
 import useData from "./Hooks/useData";
 import Loading from "../../Components/Loading";
+import TagToSelect from '../../Components/TagToSelect'
 
 const Profile = ({ user, setTheme, theme }) => {
-    const { posts, loading, userComments, choice, viewAnonymous, numberOfUserPosts, numberOfUserComments,
-        lastPostRef, lastCommentRef, setChoice, setViewAnonymous } = useData()
-
+    const { userPosts, tags, tagFilter, loading, userComments, choice, viewAnonymous, numberOfUserPosts, numberOfUserComments,
+        lastPostRef, setSearch, setTagFilter, lastCommentRef, setChoice, setViewAnonymous } = useData()
     return (
         <GlobalDiv>
             <LayoutDiv>
@@ -93,6 +93,29 @@ const Profile = ({ user, setTheme, theme }) => {
                 </div>
             </LayoutDiv>
             <LayoutDiv>
+                <div className="relative w-full shadow-md mt-6">
+                    <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                        <svg className="w-5 h-5 text-zinc-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <input type="text" id="simple-search" className="bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 text-sm rounded-lg w-full pl-10 p-3" placeholder="Search" onKeyUp={(e) => setSearch(e.target.value)} required />
+                </div>
+            </LayoutDiv>
+            <LayoutDiv>
+                <div className='bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center w-full py-2 shadow-md rounded-md mt-5'>
+                    <ul className="flex flex-wrap">
+                        {
+                            tags.map((tag) => (
+                                <div key={tag.id_tag}>
+                                    <TagToSelect tag={tag} tagFilter={tagFilter} setTagFilter={setTagFilter} />
+                                </div>
+                            ))
+                        }
+                    </ul>
+                </div>
+            </LayoutDiv>
+            <LayoutDiv>
                 <div className="flex justify-center mt-4">
                     <div className={`${viewAnonymous ? 'bg-red-600 text-zinc-300' : 'text-zinc-800 dark:text-zinc-300'} cursor-pointer rounded-full p-1`} onClick={() => setViewAnonymous(!viewAnonymous)}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-incognito" viewBox="0 0 16 16">
@@ -104,15 +127,15 @@ const Profile = ({ user, setTheme, theme }) => {
                 {
                     choice === "post" ?
                         <>
-                            {posts.map((post, i) => {
+                            {userPosts.map((post, i) => {
                                 if (viewAnonymous || !post.is_anonymous) {
-                                    if (posts.length === i + 1) {
+                                    if (userPosts.length === i + 1) {
                                         return <div ref={lastPostRef} className="mb-5" key={post.id_post} ><PostCard post={post} /></div>
                                     } else {
                                         return <div key={post.id_post}><PostCard post={post} /></div>
                                     }
                                 } else {
-                                    if (posts.length === i + 1) {
+                                    if (userPosts.length === i + 1) {
                                         return <div key={post.id_post} className="invisible" ref={lastPostRef} >a</div>
                                     }
                                 }

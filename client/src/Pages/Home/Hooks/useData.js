@@ -28,8 +28,8 @@ const useData = () => {
         if (node) observer.current.observe(node)
     }, [hasMore, loading])
 
-    const getPosts = async (tags) => {
-        const res = await getPostsService(0, search, tags)
+    const getPosts = async () => {
+        const res = await getPostsService(0, search, tagFilter)
         setPosts(postsAdapter(res))
         setHasMore(postsAdapter(res).length > 0)
         setLoading(false)
@@ -53,7 +53,7 @@ const useData = () => {
         setLoading(true)
         setBlocks(0)
         setPosts([])
-        getPosts(tagFilter)
+        getPosts()
     }, [search, tagFilter])
 
     useEffect(() => {

@@ -10,8 +10,14 @@ export const newCommentService = async (id_post, data) => {
     return await axios.post(apiUrl + `/post/${id_post}`, data, { withCredentials: true })
 }
 
-export const getUserCommentsService = async (pag = 0) => {
-    return await axios.get(apiUrl + `/user/${pag * 10}`, { withCredentials: true })
+export const getUserCommentsService = async (page, search, tags) => {
+    let string = ""
+    if (tags) {
+        tags.map(id => {
+            string = string + 'tag=' + id + '&'
+        })
+    }
+    return await axios.get(apiUrl + `/user?page=${page ? (page + "&") : "0&"}${search ? ('search=' + search + "&") : ""}${string.substring(0, string.length - 1)}`, { withCredentials: true })
 }
 
 export const getNumberOfUserCommentsService = async () => {

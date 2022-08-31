@@ -7,7 +7,7 @@ router.route('/post/:post_id/')
     .get(getPostComments)
     .post(newPostComment)
 
-router.route('/user/:pag')
+router.route('/user')
     .get(getUserComments)
 
 router.route('/number/user')
