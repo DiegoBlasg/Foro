@@ -17,7 +17,7 @@ export const getPostsService = async (page, search, tags) => {
 }
 
 export const getSinglePostService = async (id_post) => {
-    return await axios.get(apiUrl + `/single/${id_post}`)
+    return await axios.get(apiUrl + `/single/${id_post}`, { withCredentials: true })
 }
 
 export const getUserPostsService = async (page, search, tags) => {
@@ -32,5 +32,13 @@ export const getUserPostsService = async (page, search, tags) => {
 
 export const getNumberOfUserPostsService = async () => {
     return await axios.get(apiUrl + `/number/user`, { withCredentials: true })
+}
+
+export const deletePostService = async (id_post) => {
+    return await axios.delete(apiUrl + `/single/${id_post}`, { withCredentials: true })
+}
+
+export const updatePostService = async (id_post, data) => {
+    return await axios.put(apiUrl + `/single/${id_post}`, data, { withCredentials: true })
 }
 

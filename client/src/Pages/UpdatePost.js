@@ -1,42 +1,47 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import { createdPostIdAdapter } from '../Adapters/post.adapter';
+import { useNavigate, useParams } from "react-router-dom";
+import { createdPostIdAdapter, singlePostAdapter } from '../Adapters/post.adapter';
 import { tagsAdapter } from '../Adapters/tags.adapter';
 import TagToSelect from '../Components/TagToSelect';
-import { newPostService, } from '../Services/post.service';
+import { getSinglePostService, newPostService, updatePostService, } from '../Services/post.service';
 import { getTagsService, newPostTagService } from '../Services/tags.service';
 import GlobalDiv from '../Styled-components/GlobalDiv';
 import LayoutDiv from '../Styled-components/LayoutDiv';
 
-const NewPost = () => {
+const UpdatePost = () => {
+    const postId = useParams().id_post
     const [is_anonymous, setIs_anonymous] = useState(false)
     const [tags, setTags] = useState([])
     const [tagsIncluded, setTagsIncluded] = useState([])
+    const [post, setPost] = useState({})
 
     const navigate = useNavigate();
 
-    const post = async () => {
+    const getPostInfo = async () => {
+        const res = await getSinglePostService(postId)
+        setPost(singlePostAdapter(res))
+        setTagsIncluded(singlePostAdapter(res).tags.map(tag => { return tag.id_tag }))
+        setIs_anonymous(singlePostAdapter(res).is_anonymous)
+    }
+
+    const updatePostInfo = async () => {
         const postData = {
             title: document.getElementById("title").value,
             description: document.getElementById("description").value,
             is_anonymous: is_anonymous,
-        }
-        const res = await newPostService(postData)
-        const postId = createdPostIdAdapter(res)
-        const tagsData = {
             tags: tagsIncluded
         }
-        await newPostTagService(postId, tagsData)
-        navigate("/");
+        await updatePostService(postId, postData)
+        navigate("/post/" + postId);
 
     }
-
     const getTags = async () => {
         const res = await getTagsService()
         setTags(tagsAdapter(res))
     }
     useEffect(() => {
         getTags()
+        getPostInfo()
     }, [])
 
     return (
@@ -64,7 +69,7 @@ const NewPost = () => {
                     <div className="flex items-center justify-center mt-5">
                         <form className="w-full sm:w-10/12">
                             <div className="w-full shadow-md">
-                                <input type="text" id="title" className="rounded border dark:text-zinc-300 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 resize-y w-full py-2 px-3" placeholder="Title" required />
+                                <input type="text" id="title" defaultValue={post.title} className="rounded border dark:text-zinc-300 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 resize-y w-full py-2 px-3" placeholder="Title" required />
                             </div>
                         </form>
                     </div>
@@ -116,7 +121,8 @@ const NewPost = () => {
                                 <textarea
                                     className="rounded border border-zinc-400 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 resize-y w-full h-32 py-2 px-3"
                                     id="description"
-                                    placeholder='Add Your Comment...' required></textarea>
+                                    defaultValue={post.description}
+                                    placeholder='Add Your Comment...' required />
                             </div>
                             <div className="w-full flex justify-between">
                                 <div className={`${is_anonymous ? 'bg-red-600 text-zinc-300' : 'text-zinc-800 dark:text-zinc-300'} cursor-pointer rounded-full p-1`} onClick={() => setIs_anonymous(!is_anonymous)}>
@@ -125,7 +131,7 @@ const NewPost = () => {
                                     </svg>
                                 </div>
 
-                                <div className="cursor-pointer bg-red-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-red-500" onClick={() => post()} >Post</div>
+                                <div className="cursor-pointer bg-red-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-red-500" onClick={() => updatePostInfo()} >Update</div>
                             </div>
                         </form>
                     </div>
@@ -134,4 +140,4 @@ const NewPost = () => {
         </GlobalDiv>
     )
 }
-export default NewPost
+export default UpdatePost

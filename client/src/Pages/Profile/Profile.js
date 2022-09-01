@@ -108,7 +108,7 @@ const Profile = ({ user, setTheme, theme }) => {
                         {
                             tags.map((tag) => (
                                 <div key={tag.id_tag}>
-                                    <TagToSelect tag={tag} tagFilter={tagFilter} setTagFilter={setTagFilter} />
+                                    <TagToSelect tag={tag} tagsArray={tagFilter} setTagsArray={setTagFilter} />
                                 </div>
                             ))
                         }

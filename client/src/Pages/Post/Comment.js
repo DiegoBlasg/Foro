@@ -264,7 +264,7 @@ const Comment = ({ comment, getPostComments }) => {
             }
             {
                 replyComments.map((com) => (
-                    <div key={com.id_comment} className="pl-3 border-l-2 border-zinc-700 ">
+                    <div key={com.id_comment} className="pl-3 border-l-2 border-zinc-300 dark:border-zinc-700 ">
                         <Comment comment={com} getPostComments={getReplyComments} />
                     </div>
                 ))

@@ -5,6 +5,7 @@ import Profile from './Pages/Profile/Profile';
 import Post from './Pages/Post/Post';
 import NewPost from './Pages/NewPost';
 import { useEffect, useState } from 'react';
+import UpdatePost from './Pages/UpdatePost';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -49,6 +50,7 @@ function App() {
           <Route path="/profile" element={user ? <Profile user={user} theme={theme} setTheme={setTheme} /> : <Navigate to="/" />} />
           <Route path="/post/:id_post" element={user ? <Post user={user} /> : <Navigate to="/" />} />
           <Route path="/newpost" element={user ? <NewPost user={user} /> : <Navigate to="/" />} />
+          <Route path="/updatepost/:id_post" element={user ? <UpdatePost user={user} /> : <Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </div>

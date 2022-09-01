@@ -1,14 +1,35 @@
-import { useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import Comment from "./Comment"
 import GlobalDiv from "../../Styled-components/GlobalDiv"
 import LayoutDiv from "../../Styled-components/LayoutDiv"
 import useData from "./Hooks/useData"
+import { deletePostService } from "../../Services/post.service"
+import { useState } from "react"
 
 const Post = () => {
     const postId = useParams().id_post
-    const { newComment, getPostComments, comments, post, tags, is_anonymous, timeAgo, setIs_anonymous } = useData(postId)
+    const { newComment, getPostComments, setIs_anonymous, setis_deleteModalOpen, deletePost,
+        comments, post, is_anonymous, timeAgo, is_deleteModalOpen } = useData(postId)
     return (
         <GlobalDiv>
+            {
+                is_deleteModalOpen &&
+                <div className="fixed w-full h-full z-50 top-0 left-0 deletemodal">
+                    <div className='absolute w-full h-full flex flex-col justify-center items-center'>
+                        <div className="rounded-md p-5 shadow-md bg-zinc-100 dark:bg-zinc-900 w-1/2">
+                            <div className="flex justify-center flex-col mb-3">
+                                <h1 className="text-white text-2xl font-semibold">Are you sure you want to delete this post?</h1>
+                                <h1 className="text-white text-sm mt-2">The post will be deleted forever</h1>
+
+                            </div>
+                            <div className="flex justify-end space-x-4">
+                                <div className="cursor-pointer bg-green-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-green-500" onClick={() => { setis_deleteModalOpen(false) }} >Back</div>
+                                <div className="cursor-pointer bg-red-600 text-zinc-100 font-medium py-1 px-4 rounded-lg hover:bg-red-500" onClick={deletePost} >Delete</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
             <LayoutDiv>
                 <div className="rounded-md p-5 shadow-md w-full bg-zinc-100 dark:bg-zinc-800">
                     <div className="flex flex-wrap flex-col items-start space-y-4 w-full pb-3 border-b dark:border-zinc-700">
@@ -52,6 +73,26 @@ const Post = () => {
                         <div className="mb-3 text-3xl font-bold text-center pb-6 border-b dark:border-zinc-700 dark:text-zinc-100" style={{ wordWrap: "break-word" }}>{post.title}</div>
                         <div className="text-md text-zinc-600 dark:text-zinc-400 px-2" style={{ wordWrap: "break-word" }}>{post.description}</div>
                     </div>
+                    {
+                        post.is_owner &&
+                        <div className="flex space-x-4 text-zinc-500">
+
+                            <Link to={`/updatepost/${post.id_post}`} className="flex items-center mr-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                </svg>
+                                <h1 className="ml-2">Edit</h1>
+                            </Link>
+
+                            <div className="flex items-center cursor-pointer" onClick={() => setis_deleteModalOpen(true)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill" viewBox="0 0 16 16">
+                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+                                </svg>
+                                <h1 className="ml-2">Delete</h1>
+
+                            </div>
+                        </div>
+                    }
 
                 </div>
             </LayoutDiv>

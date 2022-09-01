@@ -57,7 +57,7 @@ contractsCtrl.getSinglePost = async (req, res) => {
     try {
         const sql = `
         SELECT IF (p.is_anonymous = true, null, u.user_name) as user_name,
-        IF (p.is_anonymous = true, null, u.email) as email,
+        p.email,
         IF (p.is_anonymous = true, null, u.user_image) as user_image,
         id_post, title, description, is_anonymous, created_at
         FROM posts p LEFT JOIN users u ON u.email = p.email
@@ -75,6 +75,9 @@ contractsCtrl.getSinglePost = async (req, res) => {
                 rows[0].tags.push(tag)
             }
         })
+        const USER_EMAIL = req.session.passport.user.emails[0].value
+        rows[0].is_owner = rows[0].email == USER_EMAIL ? true : false
+        rows[0].email = rows[0].is_anonymous ? null : rows[0].email
         res.status(200).json({ post: rows[0] });
     } catch (error) {
         res.status(400).send(error.message)
@@ -85,6 +88,48 @@ contractsCtrl.newPost = async (req, res) => {
         const { title, description, is_anonymous } = req.body;
         const sql = "INSERT INTO posts (email, title, description, is_anonymous, created_at, number_of_comments) VALUES(?, ?, ?, ?, NOW(), 0)";
         const rows = await pool.query(sql, [req.session.passport.user.emails[0].value, title, description, is_anonymous]);
+        res.status(200).json({ insertId: rows.insertId.toString() });
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+contractsCtrl.deletePost = async (req, res) => {
+    try {
+        const sql = "DELETE FROM posts WHERE id_post = ? AND email = ?";
+        await pool.query(sql, [req.params.id_post, req.session.passport.user.emails[0].value]);
+        res.status(200).json({ post: "deleted" });
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+contractsCtrl.updatePost = async (req, res) => {
+    try {
+        const { title, description, is_anonymous, tags } = req.body;
+        const sql = "UPDATE posts SET title = ?, description = ?, is_anonymous = ? WHERE id_post = ? AND email = ?";
+        const rows = await pool.query(sql, [title, description, is_anonymous, req.params.id_post, req.session.passport.user.emails[0].value]);
+        if (tags.length <= 0) {
+            const sql = "DELETE FROM tags_posts WHERE id_post = ?";
+            await pool.query(sql, req.params.id_post);
+        }
+        tags.map(async (tag) => {
+            const sql = `
+            SELECT tp.id_tag
+            FROM tags_posts tp LEFT JOIN tags t ON tp.id_tag = t.id_tag
+                LEFT JOIN posts p ON tp.id_post = p.id_post
+            WHERE p.id_post = ? AND p.email = ?`;
+            const rows = await pool.query(sql, [req.params.id_post, req.session.passport.user.emails[0].value]);
+            if (!rows.some(e => e.id_tag === tag)) {
+                const sql = "INSERT INTO tags_posts VALUES(?,?)";
+                await pool.query(sql, [req.params.id_post, tag]);
+            }
+            rows.map(async (tag) => {
+                if (!tags.includes(tag.id_tag)) {
+                    const sql = "DELETE FROM tags_posts WHERE id_tag = ?";
+                    await pool.query(sql, tag.id_tag);
+                }
+            })
+        })
         res.status(200).json({ insertId: rows.insertId.toString() });
     } catch (error) {
         res.status(400).send(error.message)
