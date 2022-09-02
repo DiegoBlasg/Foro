@@ -12,18 +12,19 @@ const useData = (postId) => {
     const [is_anonymous, setIs_anonymous] = useState(false)
     const [timeAgo, setTimeAgo] = useState("")
     const [is_deleteModalOpen, setis_deleteModalOpen] = useState(false)
+    const [value, setValue] = useState("")
 
     const navigate = useNavigate();
 
     const newComment = async () => {
         const commentData = {
-            content: document.getElementById("commentContent").value,
+            content: value,
             is_anonymous: is_anonymous,
             parent_comment_id: null
         }
         await newCommentService(postId, commentData)
         getPostComments()
-        document.getElementById("commentContent").value = ""
+        setValue("")
     }
 
     const getPostInfo = async () => {
@@ -52,7 +53,7 @@ const useData = (postId) => {
     }, [])
     return {
         newComment, getPostComments, setis_deleteModalOpen, deletePost, setIs_anonymous, setis_deleteModalOpen, deletePost, setIs_anonymous,
-        comments, post, is_anonymous, timeAgo, is_deleteModalOpen
+        comments, post, is_anonymous, timeAgo, is_deleteModalOpen, value, setValue
     }
 }
 export default useData

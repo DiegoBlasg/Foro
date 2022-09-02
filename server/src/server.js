@@ -4,6 +4,7 @@ const cors = require('cors');
 const passportSetup = require('./passport')
 const passport = require('passport');
 const dotenv = require('dotenv');
+var bodyParser = require("body-parser");
 
 dotenv.config({ path: '.env.local' });
 
@@ -24,6 +25,7 @@ app.use(cookieSession({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.json({ limit: '5000kb' }));
 
 app.use(cors({
     origin: "http://localhost:3000",

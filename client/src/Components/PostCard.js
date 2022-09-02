@@ -42,9 +42,8 @@ const PostCard = ({ post }) => {
 
                 <div className="mt-4 mb-6">
                     <div className="mb-3 text-xl font-bold text-center sm:text-left dark:text-zinc-100" style={{ wordWrap: "break-word" }}>{post.title}</div>
-                    <div className="text-sm text-zinc-600 dark:text-zinc-400" style={{ wordWrap: "break-word" }}>{post.description}</div>
+                    <div className="text-sm text-zinc-600 dark:text-zinc-400" style={{ wordWrap: "break-word" }} dangerouslySetInnerHTML={{ __html: post.description }}></div>
                 </div>
-
                 <div>
                     <div className="flex items-center justify-between text-zinc-500">
                         <div className="flex space-x-4 md:space-x-8">

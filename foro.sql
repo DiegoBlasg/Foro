@@ -21,7 +21,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `comments` (
   `id_comment` int(11) NOT NULL,
   `id_post` int(11) NOT NULL,
-  `content` varchar(4000) NOT NULL,
+  `content` LONGTEXT NOT NULL,
   `created_at` datetime NOT NULL,
   `email` varchar(100) NOT NULL,
   `is_anonymous` tinyint(1) NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE `posts` (
   `id_post` int(11) NOT NULL,
   `email` varchar(100) NOT NULL,
   `title` varchar(500) NOT NULL,
-  `description` varchar(4000) NOT NULL,
+  `description`  LONGTEXT NOT NULL,
   `is_anonymous` tinyint(1) NOT NULL,
   `created_at` datetime NOT NULL
   `number_of_comments` int(11) NOT NULL,

@@ -86,9 +86,13 @@ contractsCtrl.getSinglePost = async (req, res) => {
 contractsCtrl.newPost = async (req, res) => {
     try {
         const { title, description, is_anonymous } = req.body;
-        const sql = "INSERT INTO posts (email, title, description, is_anonymous, created_at, number_of_comments) VALUES(?, ?, ?, ?, NOW(), 0)";
-        const rows = await pool.query(sql, [req.session.passport.user.emails[0].value, title, description, is_anonymous]);
-        res.status(200).json({ insertId: rows.insertId.toString() });
+        if (title.includes('<script') || description.includes('<script')) {
+            throw new Error("The title or description cannot contain the script tag")
+        } else {
+            const sql = "INSERT INTO posts (email, title, description, is_anonymous, created_at, number_of_comments) VALUES(?, ?, ?, ?, NOW(), 0)";
+            const rows = await pool.query(sql, [req.session.passport.user.emails[0].value, title, description, is_anonymous]);
+            res.status(200).json({ insertId: rows.insertId.toString() });
+        }
     } catch (error) {
         res.status(400).send(error.message)
     }
@@ -106,31 +110,35 @@ contractsCtrl.deletePost = async (req, res) => {
 contractsCtrl.updatePost = async (req, res) => {
     try {
         const { title, description, is_anonymous, tags } = req.body;
-        const sql = "UPDATE posts SET title = ?, description = ?, is_anonymous = ? WHERE id_post = ? AND email = ?";
-        const rows = await pool.query(sql, [title, description, is_anonymous, req.params.id_post, req.session.passport.user.emails[0].value]);
-        if (tags.length <= 0) {
-            const sql = "DELETE FROM tags_posts WHERE id_post = ?";
-            await pool.query(sql, req.params.id_post);
-        }
-        tags.map(async (tag) => {
-            const sql = `
+        if (title.includes('<script') || description.includes('<script')) {
+            throw new Error("The title or description cannot contain the script tag")
+        } else {
+            const sql = "UPDATE posts SET title = ?, description = ?, is_anonymous = ? WHERE id_post = ? AND email = ?";
+            const rows = await pool.query(sql, [title, description, is_anonymous, req.params.id_post, req.session.passport.user.emails[0].value]);
+            if (tags.length <= 0) {
+                const sql = "DELETE FROM tags_posts WHERE id_post = ?";
+                await pool.query(sql, req.params.id_post);
+            }
+            tags.map(async (tag) => {
+                const sql = `
             SELECT tp.id_tag
             FROM tags_posts tp LEFT JOIN tags t ON tp.id_tag = t.id_tag
                 LEFT JOIN posts p ON tp.id_post = p.id_post
             WHERE p.id_post = ? AND p.email = ?`;
-            const rows = await pool.query(sql, [req.params.id_post, req.session.passport.user.emails[0].value]);
-            if (!rows.some(e => e.id_tag === tag)) {
-                const sql = "INSERT INTO tags_posts VALUES(?,?)";
-                await pool.query(sql, [req.params.id_post, tag]);
-            }
-            rows.map(async (tag) => {
-                if (!tags.includes(tag.id_tag)) {
-                    const sql = "DELETE FROM tags_posts WHERE id_tag = ?";
-                    await pool.query(sql, tag.id_tag);
+                const rows = await pool.query(sql, [req.params.id_post, req.session.passport.user.emails[0].value]);
+                if (!rows.some(e => e.id_tag === tag)) {
+                    const sql = "INSERT INTO tags_posts VALUES(?,?)";
+                    await pool.query(sql, [req.params.id_post, tag]);
                 }
+                rows.map(async (tag) => {
+                    if (!tags.includes(tag.id_tag)) {
+                        const sql = "DELETE FROM tags_posts WHERE id_tag = ?";
+                        await pool.query(sql, tag.id_tag);
+                    }
+                })
             })
-        })
-        res.status(200).json({ insertId: rows.insertId.toString() });
+            res.status(200).json({ insertId: rows.insertId.toString() });
+        }
     } catch (error) {
         res.status(400).send(error.message)
     }
