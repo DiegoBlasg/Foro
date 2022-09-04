@@ -7,10 +7,14 @@ import LayoutDiv from "../../Styled-components/LayoutDiv";
 import useData from "./Hooks/useData";
 import Loading from "../../Components/Loading";
 import TagToSelect from '../../Components/TagToSelect'
+import ReplyCard from "./ReplyCard";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Profile = ({ user, setTheme, theme }) => {
-    const { userPosts, tags, tagFilter, loading, userComments, choice, viewAnonymous, numberOfUserPosts, numberOfUserComments,
-        lastPostRef, setSearch, setTagFilter, lastCommentRef, setChoice, setViewAnonymous } = useData()
+    const { userPosts, tags, tagFilter, loading, userComments, choice, viewAnonymous, numberOfUserPosts, numberOfUserComments, replies,
+        lastPostRef, setSearch, setTagFilter, lastReplieRef, lastCommentRef, setChoice, setViewAnonymous } = useData()
+
     return (
         <GlobalDiv>
             <LayoutDiv>
@@ -63,16 +67,20 @@ const Profile = ({ user, setTheme, theme }) => {
                         </svg>
                         <h1>Comments</h1>
                     </div>
-                    <div className={`flex justify-center items-center flex-col sm:flex-row border border-zinc-300 dark:border-zinc-700 cursor-pointer w-full bg-zinc-${choice === "mention" ? "300" : "200"} hover:bg-zinc-300 text-zinc-700 dark:bg-zinc-${choice === "mention" ? "700" : "800"} dark:hover:bg-zinc-700 dark:text-zinc-300 font-semibold py-2`} onClick={() => setChoice("mention")}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-at mx-2" viewBox="0 0 16 16">
-                            <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z" />
+                    <div className={`flex justify-center items-center flex-col sm:flex-row border border-zinc-300 dark:border-zinc-700 cursor-pointer w-full bg-zinc-${choice === "reply" ? "300" : "200"} hover:bg-zinc-300 text-zinc-700 dark:bg-zinc-${choice === "reply" ? "700" : "800"} dark:hover:bg-zinc-700 dark:text-zinc-300 font-semibold py-2`} onClick={() => setChoice("reply")}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-reply-all-fill mx-2" viewBox="0 0 16 16">
+                            <path d="M8.021 11.9 3.453 8.62a.719.719 0 0 1 0-1.238L8.021 4.1a.716.716 0 0 1 1.079.619V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z" />
+                            <path d="M5.232 4.293a.5.5 0 0 1-.106.7L1.114 7.945a.5.5 0 0 1-.042.028.147.147 0 0 0 0 .252.503.503 0 0 1 .042.028l4.012 2.954a.5.5 0 1 1-.593.805L.539 9.073a1.147 1.147 0 0 1 0-1.946l3.994-2.94a.5.5 0 0 1 .699.106z" />
                         </svg>
-                        <h1>Mentions</h1>
-                        {/*<div className='absolute text-red-600 -ml-32 notification'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-bell-fill" viewBox="0 0 16 16">
-                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
-                            </svg>
-                    </div>*/}
+                        <h1>Replies</h1>
+                        {replies.map(rep => (
+                            !rep.is_read &&
+                            <div className='absolute text-red-600 -ml-28 notification' key={rep.id_reply}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-bell-fill" viewBox="0 0 16 16">
+                                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
+                                </svg>
+                            </div>
+                        ))}
                     </div>
                     {
                         theme === "dark" ?
@@ -128,7 +136,7 @@ const Profile = ({ user, setTheme, theme }) => {
                     choice === "post" ?
                         <>
                             {userPosts.map((post, i) => {
-                                if (viewAnonymous || !post.is_anonymous) {
+                                if (viewAnonymous || !post.post_is_anonymous) {
                                     if (userPosts.length === i + 1) {
                                         return <div ref={lastPostRef} className="mb-5" key={post.id_post} ><PostCard post={post} /></div>
                                     } else {
@@ -144,22 +152,41 @@ const Profile = ({ user, setTheme, theme }) => {
 
 
                         :
-                        choice === "comment" &&
-                        <>
-                            {userComments.map((commentInfo, i) => {
-                                if (viewAnonymous || !commentInfo.is_anonymous) {
-                                    if (userComments.length === i + 1) {
-                                        return <div ref={lastCommentRef} className="mb-5" key={commentInfo.id_comment} ><UserCommentCard commentInfo={commentInfo} /></div>
+                        choice === "comment" ?
+                            <>
+                                {userComments.map((commentInfo, i) => {
+                                    if (viewAnonymous || !commentInfo.is_anonymous) {
+                                        if (userComments.length === i + 1) {
+                                            return <div ref={lastCommentRef} className="mb-5" key={commentInfo.id_comment} ><UserCommentCard commentInfo={commentInfo} /></div>
+                                        } else {
+                                            return <div key={commentInfo.id_comment}><UserCommentCard commentInfo={commentInfo} /></div>
+                                        }
                                     } else {
-                                        return <div key={commentInfo.id_comment}><UserCommentCard commentInfo={commentInfo} /></div>
+                                        if (userComments.length === i + 1) {
+                                            return <div key={commentInfo.id_comment} className="invisible" ref={lastCommentRef} >a</div>
+                                        }
                                     }
-                                } else {
-                                    if (userComments.length === i + 1) {
-                                        return <div key={commentInfo.id_comment} className="invisible" ref={lastCommentRef} >a</div>
+                                })}
+                            </>
+                            :
+                            choice === "reply" &&
+                            <>
+                                {replies.map((reply, i) => {
+
+                                    let view = reply.id_comment != null ? reply.comment_is_anonymous : reply.post_is_anonymous
+                                    if (viewAnonymous || !view) {
+                                        if (replies.length === i + 1) {
+                                            return <div ref={lastReplieRef} className="mb-5" key={i} ><ReplyCard reply={reply} /></div>
+                                        } else {
+                                            return <div key={i}><ReplyCard reply={reply} /></div>
+                                        }
+                                    } else {
+                                        if (replies.length === i + 1) {
+                                            return <div key={i} className="invisible" ref={lastReplieRef} >a</div>
+                                        }
                                     }
-                                }
-                            })}
-                        </>
+                                })}
+                            </>
                 }
             </LayoutDiv>
             {

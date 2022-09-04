@@ -26,7 +26,7 @@ contractsCtrl.getPosts = async (req, res) => {
         SELECT IF (p.is_anonymous = true, null, u.user_name) as user_name,
         IF (p.is_anonymous = true, null, u.email) as email,
         IF (p.is_anonymous = true, null, u.user_image) as user_image,
-        p.id_post, p.title, p.description, p.is_anonymous, p.created_at, p.number_of_comments
+        p.id_post, p.title, p.is_anonymous, p.created_at, p.number_of_comments
         FROM posts p LEFT JOIN users u ON u.email = p.email
         WHERE p.title LIKE '%${req.query.search || ''}%' AND ${string.substring(0, string.length - 5)}
         ORDER BY p.created_at DESC, p.id_post DESC

@@ -52,7 +52,6 @@ const useData = () => {
     useEffect(() => {
         setLoading(true)
         setBlocks(0)
-        setPosts([])
         getPosts()
     }, [search, tagFilter])
 

@@ -9,6 +9,7 @@ import TextEditor from "../../Components/TextEditor/TextEditor"
 
 const Post = () => {
     const postId = useParams().id_post
+
     const { newComment, getPostComments, setIs_anonymous, setis_deleteModalOpen, deletePost,
         comments, post, is_anonymous, timeAgo, is_deleteModalOpen, value, setValue } = useData(postId)
     return (

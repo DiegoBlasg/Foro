@@ -5,11 +5,14 @@ import { getNumberOfUserCommentsService, getUserCommentsService } from "../../..
 import { getNumberOfUserPostsService, getUserPostsService } from "../../../Services/post.service"
 import { getTagsService } from "../../../Services/tags.service"
 import { tagsAdapter } from "../../../Adapters/tags.adapter"
+import { getRepliesService } from "../../../Services/replies.service"
+import { repliesAdapter } from "../../../Adapters/replies.adapter"
 
 const useData = () => {
     const [tags, setTags] = useState([])
     const [userPosts, setUserPosts] = useState([])
     const [userComments, setUserComments] = useState([])
+    const [replies, setReplies] = useState([])
     const [numberOfUserPosts, setNumberOfUserPosts] = useState(0)
     const [numberOfUserComments, setNumberOfUserComments] = useState(0)
 
@@ -18,9 +21,11 @@ const useData = () => {
 
     const [postsBlocks, setPostsBlocks] = useState(0)
     const [commentsBlocks, setCommentsBlocks] = useState(0)
+    const [repliesBlocks, setRepliesBlocks] = useState(0)
 
     const [postHasMore, setPostHasMore] = useState(false)
     const [commentHasMore, setCommentHasMore] = useState(false)
+    const [replyHasMore, setReplyHasMore] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const [search, setSearch] = useState(null)
@@ -49,6 +54,24 @@ const useData = () => {
         if (node) observer.current.observe(node)
     }, [commentHasMore, loading])
 
+    const lastReplieRef = useCallback(node => {
+        if (loading) return
+        if (observer.current) observer.current.disconnect()
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && replyHasMore) {
+                moreReplies()
+            }
+        })
+        if (node) observer.current.observe(node)
+    }, [replyHasMore, loading])
+
+    const getReplies = async () => {
+        const res = await getRepliesService(0, search, tagFilter)
+        setReplyHasMore(repliesAdapter(res).length > 0)
+        setReplies(repliesAdapter(res))
+        setLoading(false)
+    }
+
     const getUserPosts = async () => {
         const res = await getUserPostsService(0, search, tagFilter)
         setPostHasMore(postsAdapter(res).length > 0)
@@ -69,6 +92,14 @@ const useData = () => {
         setPostHasMore(postsAdapter(res).length > 0)
         setPostsBlocks(prev => prev + 1)
         setUserPosts([...userPosts, ...postsAdapter(res)])
+        setLoading(false)
+    }
+    const moreReplies = async () => {
+        setLoading(true)
+        const res = await getRepliesService(repliesBlocks + 1, search, tagFilter)
+        setReplyHasMore(repliesAdapter(res).length > 0)
+        setRepliesBlocks(prev => prev + 1)
+        setReplies([...replies, ...repliesAdapter(res)])
         setLoading(false)
     }
     const moreUserComments = async () => {
@@ -98,10 +129,10 @@ const useData = () => {
         setLoading(true)
         setPostsBlocks(0)
         setCommentsBlocks(0)
-        setUserComments([])
-        setUserPosts([])
+        setRepliesBlocks(0)
         getUserPosts()
         getUserComments()
+        getReplies()
     }, [search, tagFilter])
     useEffect(() => {
         getNumberOfUserPosts()
@@ -109,8 +140,8 @@ const useData = () => {
         getTags()
     }, [])
     return {
-        userPosts, tags, search, tagFilter, loading, userComments, choice, viewAnonymous, postsBlocks, commentsBlocks, numberOfUserPosts, numberOfUserComments,
-        lastPostRef, setSearch, setTagFilter, lastCommentRef, setChoice, setViewAnonymous, moreUserPosts, moreUserComments
+        userPosts, tags, search, tagFilter, loading, userComments, choice, viewAnonymous, postsBlocks, commentsBlocks, replies, numberOfUserPosts, numberOfUserComments,
+        lastPostRef, setSearch, setTagFilter, lastCommentRef, lastReplieRef, setChoice, setViewAnonymous, moreUserPosts, moreUserComments
     }
 }
 export default useData

@@ -3,9 +3,8 @@ export const postsAdapter = (posts) => {
         return {
             id_post: post.id_post,
             title: post.title,
-            description: post.description,
-            is_anonymous: post.is_anonymous,
-            created_at: post.created_at,
+            post_is_anonymous: post.is_anonymous,
+            post_created_at: post.created_at,
             email: post.email,
             user_image: post.user_image,
             user_name: post.user_name,

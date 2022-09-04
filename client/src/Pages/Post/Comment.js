@@ -16,7 +16,7 @@ const Comment = ({ comment, getPostComments }) => {
     const [value, setValue] = useState("")
 
     useEffect(() => {
-        setTimeAgo(elapsedTime(comment.created_at))
+        setTimeAgo(elapsedTime(comment.comment_created_at))
         getReplyComments()
     }, [])
     const newComment = async () => {
@@ -67,7 +67,7 @@ const Comment = ({ comment, getPostComments }) => {
                     </div>
                 </div>
             }
-            <div className="overflow-ellipsis overflow-hidden commentinit">
+            <div className="overflow-ellipsis overflow-hidden commentinit" id={"comment" + comment.id_comment}>
                 <div className="flex flex-wrap justify-between space-x-3 w-full mt-4">
                     <div className="flex items-center space-x-3">
                         <div className="h-8 w-8 rounded-full dark:text-zinc-300">

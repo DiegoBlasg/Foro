@@ -10,7 +10,7 @@ export const commentsAdapter = (comments) => {
     const postsAdapted = comments.data.comments.map((com) => {
         return {
             content: com.content,
-            created_at: com.created_at,
+            comment_created_at: com.created_at,
             email: com.email,
             id_comment: com.id_comment,
             id_post: com.id_post,
@@ -27,11 +27,11 @@ export const userCommentsAdapter = (comments) => {
     const postsAdapted = comments.data.comments.map((com) => {
         return {
             content: com.content,
-            created_at: com.created_at,
+            comment_created_at: com.created_at,
             email: com.email,
             id_comment: com.id_comment,
             id_post: com.id_post,
-            is_anonymous: com.is_anonymous,
+            comment_is_anonymous: com.is_anonymous,
             user_image: com.user_image,
             user_name: com.user_name,
             title: com.title,

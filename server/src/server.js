@@ -44,6 +44,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/posts', require('./Routes/posts'));
 app.use('/comments', require('./Routes/comments'));
 app.use('/tags', require('./Routes/tags'));
+app.use('/replies', require('./Routes/replies'))
 app.use('/auth', require('./Routes/auth'))
 
 /**Start listening */
