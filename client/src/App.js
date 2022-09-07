@@ -6,6 +6,7 @@ import Post from './Pages/Post/Post';
 import NewPost from './Pages/NewPost';
 import { useEffect, useState } from 'react';
 import UpdatePost from './Pages/UpdatePost';
+import Saved from './Pages/Saved/Saved';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -48,7 +49,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={user ? <Profile user={user} theme={theme} setTheme={setTheme} /> : <Navigate to="/" />} />
-          <Route path="/post/:id_post" element={user ? <Post user={user} /> : <Navigate to="/" />} />
+          <Route path="/post/:id_post" element={<Post user={user} />} />
+          <Route path="/saved" element={user ? <Saved user={user} /> : <Navigate to="/" />} />
           <Route path="/newpost" element={user ? <NewPost user={user} /> : <Navigate to="/" />} />
           <Route path="/updatepost/:id_post" element={user ? <UpdatePost user={user} /> : <Navigate to="/" />} />
         </Routes>

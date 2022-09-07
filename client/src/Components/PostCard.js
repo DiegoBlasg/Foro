@@ -1,22 +1,22 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { elapsedTime } from "../Utilities/format-elapsedTime.utility"
-import axios from 'axios';
-import { updateReplieService } from '../Services/replies.service';
+import { updateReplyService } from '../Services/replies.service';
 
 const PostCard = ({ post }) => {
     const [timeAgo, setTimeAgo] = useState("")
 
-
-    const updateRead = async () => {
-        await updateReplieService(post.id_reply)
+    const updateReplyIs_read = async () => {
+        await updateReplyService(post.id_reply)
     }
+
     useEffect(() => {
         setTimeAgo(elapsedTime(post.post_created_at))
     }, [])
+
     return (
         <div className='flex items-center justify-center mt-5'>
-            <Link to={`/post/${post.id_post}`} className={`rounded-md p-5 shadow-md w-full bg-zinc-100 dark:bg-zinc-800 cursor-pointer ${post.is_read == false && "border-4 border-red-400 dark:border-red-900"}`} onClick={() => { window.scrollTo(0, 0); if (post.is_read == false) updateRead() }}>
+            <Link to={`/post/${post.id_post}`} className={`rounded-md p-5 shadow-md w-full bg-zinc-100 dark:bg-zinc-800 cursor-pointer ${post.is_read == false && "border-4 border-red-400 dark:border-red-900"}`} onClick={() => { window.scrollTo(0, 0); if (post.is_read == false) updateReplyIs_read() }}>
                 <div className="flex flex-wrap flex-col  sm:flex-row items-center justify-between space-y-4 w-full sm:space-y-0 border-b dark:border-zinc-800 pb-3">
                     <div className="flex items-center space-x-3">
                         <div className="h-8 w-8 rounded-full dark:text-zinc-300">
@@ -52,7 +52,7 @@ const PostCard = ({ post }) => {
                 <div>
                     <div className="flex items-center justify-between text-zinc-500">
                         <div className="flex space-x-4 md:space-x-8">
-                            <div className="flex items-center dark:">
+                            <div className="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                                 </svg>

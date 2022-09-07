@@ -62,12 +62,12 @@ contractsCtrl.getSinglePost = async (req, res) => {
         id_post, title, description, is_anonymous, created_at
         FROM posts p LEFT JOIN users u ON u.email = p.email
         WHERE id_post = ?`;
-        const rows = await pool.query(sql, req.params.id_post);
+        const rows = await pool.query(sql, parseInt(req.params.id_post));
 
         const sql2 = `
         SELECT tp.id_tag, tp.id_post, t.name, t.color 
         FROM tags_posts tp LEFT JOIN tags t ON tp.id_tag = t.id_tag`;
-        const rows2 = await pool.query(sql2, req.params.post_id);
+        const rows2 = await pool.query(sql2);
 
         rows[0].tags = []
         rows2.map(tag => {
@@ -75,11 +75,16 @@ contractsCtrl.getSinglePost = async (req, res) => {
                 rows[0].tags.push(tag)
             }
         })
-        const USER_EMAIL = req.session.passport.user.emails[0].value
+
+        const USER_EMAIL = req.session.passport.user ? req.session.passport.user.emails[0].value : null
+        const sql3 = 'SELECT id_post FROM saved_posts WHERE email = ? AND id_post = ?';
+        const rows3 = await pool.query(sql3, [USER_EMAIL, parseInt(req.params.id_post)]);
+        rows[0].is_saved = rows3.length > 0 ? true : false
         rows[0].is_owner = rows[0].email == USER_EMAIL ? true : false
         rows[0].email = rows[0].is_anonymous ? null : rows[0].email
         res.status(200).json({ post: rows[0] });
     } catch (error) {
+        console.log(error);
         res.status(400).send(error.message)
     }
 }
@@ -202,6 +207,63 @@ contractsCtrl.getNumberOfUserPosts = async (req, res) => {
         const rows = await pool.query(sql, req.session.passport.user.emails[0].value);
         res.status(200).json({ numberOfPosts: rows[0].post.toString() });
     } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+contractsCtrl.savePost = async (req, res) => {
+    try {
+        const sql = `INSERT INTO saved_posts (email, id_post) VALUES(?, ?)`;
+        await pool.query(sql, [req.session.passport.user.emails[0].value, req.params.id_post]);
+        res.status(200).json({ message: "success" });
+    } catch (error) {
+        console.log(error);
+        res.status(400).send(error.message)
+    }
+}
+contractsCtrl.unsavePost = async (req, res) => {
+    try {
+        const sql = `DELETE FROM saved_posts WHERE email = ? AND id_post = ?`;
+        await pool.query(sql, [req.session.passport.user.emails[0].value, req.params.id_post]);
+        res.status(200).json({ message: "success" });
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+contractsCtrl.getSavedPosts = async (req, res) => {
+    try {
+        const sql = `
+        SELECT IF (p.is_anonymous = true, null, u.user_name) as user_name,
+        IF (p.is_anonymous = true, null, u.email) as email,
+        IF (p.is_anonymous = true, null, u.user_image) as user_image,
+        p.id_post, p.title, p.is_anonymous, p.created_at, p.number_of_comments
+        FROM posts p LEFT JOIN users u ON u.email = p.email
+        WHERE id_post IN (
+            SELECT id_post
+            FROM saved_posts
+            WHERE email = '${req.session.passport.user.emails[0].value}'
+        )
+        ORDER BY p.created_at DESC, p.id_post DESC
+        LIMIT ${parseInt(req.query.page * POSTS_PER_PAGE)}, ${POSTS_PER_PAGE}`;
+        const rows = await pool.query(sql);
+        const sql2 = `
+        SELECT tp.id_tag, tp.id_post, t.name, t.color 
+        FROM tags_posts tp LEFT JOIN tags t ON tp.id_tag = t.id_tag`;
+        const rows2 = await pool.query(sql2);
+
+        const ress = rows.map(post => {
+            post.tags = []
+            rows2.map(tag => {
+                if (tag.id_post == post.id_post) {
+                    post.tags.push(tag)
+                }
+            })
+            return post
+        })
+
+        res.status(200).json({ posts: ress });
+    } catch (error) {
+        console.log(error);
         res.status(400).send(error.message)
     }
 }

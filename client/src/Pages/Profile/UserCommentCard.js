@@ -1,15 +1,15 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { updateReplieService } from "../../Services/replies.service"
+import { updateReplyService } from "../../Services/replies.service"
 import { elapsedTime } from "../../Utilities/format-elapsedTime.utility"
 
 const UserCommentCard = ({ commentInfo }) => {
     const [timeAgo, setTimeAgo] = useState("")
 
     const updateRead = async () => {
-        await updateReplieService(commentInfo.id_reply)
+        await updateReplyService(commentInfo.id_reply)
     }
+
     useEffect(() => {
         setTimeAgo(elapsedTime(commentInfo.comment_created_at))
     }, [])

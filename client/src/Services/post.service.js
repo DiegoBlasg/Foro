@@ -42,3 +42,15 @@ export const updatePostService = async (id_post, data) => {
     return await axios.put(apiUrl + `/single/${id_post}`, data, { withCredentials: true })
 }
 
+export const savePostService = async (id_post) => {
+    return await axios.post(apiUrl + `/save/${id_post}`, {}, { withCredentials: true })
+}
+
+export const unsavePostService = async (id_post) => {
+    return await axios.delete(apiUrl + `/unsave/${id_post}`, { withCredentials: true })
+}
+
+export const getSavedPostService = async (page) => {
+    return await axios.get(apiUrl + `/saved?page=${page}`, { withCredentials: true })
+}
+

@@ -4,16 +4,20 @@ import { Link } from "react-router-dom";
 import UserCommentCard from "./UserCommentCard";
 import GlobalDiv from "../../Styled-components/GlobalDiv";
 import LayoutDiv from "../../Styled-components/LayoutDiv";
-import useData from "./Hooks/useData";
 import Loading from "../../Components/Loading";
 import TagToSelect from '../../Components/TagToSelect'
 import ReplyCard from "./ReplyCard";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import useProfileData from "./Hooks/useProfileData";
+import useProfileCommentsData from "./Hooks/useProfileCommentsData";
+import useProfilePostsData from "./Hooks/useProfilePostsData";
+import useProfileRepliesData from "./Hooks/useProfileRepliesData";
 
 const Profile = ({ user, setTheme, theme }) => {
-    const { userPosts, tags, tagFilter, loading, userComments, choice, viewAnonymous, numberOfUserPosts, numberOfUserComments, replies,
-        lastPostRef, setSearch, setTagFilter, lastReplieRef, lastCommentRef, setChoice, setViewAnonymous } = useData()
+    const { search, tagFilter, choice, viewAnonymous, numberOfUserPosts, numberOfUserComments, tags,
+        setSearch, setTagFilter, setChoice, setViewAnonymous } = useProfileData()
+    const { userComments, lastCommentRef, commentsLoading } = useProfileCommentsData(search, tagFilter)
+    const { replies, lastReplieRef, repliesLoading } = useProfileRepliesData(search, tagFilter)
+    const { userPosts, lastPostRef, postsLoading } = useProfilePostsData(search, tagFilter)
 
     return (
         <GlobalDiv>
@@ -133,64 +137,65 @@ const Profile = ({ user, setTheme, theme }) => {
                 </div>
 
                 {
-                    choice === "post" ?
-                        <>
-                            {userPosts.map((post, i) => {
-                                if (viewAnonymous || !post.post_is_anonymous) {
-                                    if (userPosts.length === i + 1) {
-                                        return <div ref={lastPostRef} className="mb-5" key={post.id_post} ><PostCard post={post} /></div>
-                                    } else {
-                                        return <div key={post.id_post}><PostCard post={post} /></div>
-                                    }
+                    choice === "post" &&
+                    <>
+                        {userPosts.map((post, i) => {
+                            if (viewAnonymous || !post.post_is_anonymous) {
+                                if (userPosts.length === i + 1) {
+                                    return <div ref={lastPostRef} className="mb-5" key={post.id_post} ><PostCard post={post} /></div>
                                 } else {
-                                    if (userPosts.length === i + 1) {
-                                        return <div key={post.id_post} className="invisible" ref={lastPostRef} >a</div>
-                                    }
+                                    return <div key={post.id_post}><PostCard post={post} /></div>
                                 }
-                            })}
-                        </>
+                            } else {
+                                if (userPosts.length === i + 1) {
+                                    return <div key={post.id_post} className="invisible" ref={lastPostRef} >a</div>
+                                }
+                            }
+                        })}
+                    </>
 
+                }
+                {
+                    choice === "comment" &&
+                    <>
+                        {userComments.map((commentInfo, i) => {
+                            if (viewAnonymous || !commentInfo.is_anonymous) {
+                                if (userComments.length === i + 1) {
+                                    return <div ref={lastCommentRef} className="mb-5" key={commentInfo.id_comment} ><UserCommentCard commentInfo={commentInfo} /></div>
+                                } else {
+                                    return <div key={commentInfo.id_comment}><UserCommentCard commentInfo={commentInfo} /></div>
+                                }
+                            } else {
+                                if (userComments.length === i + 1) {
+                                    return <div key={commentInfo.id_comment} className="invisible" ref={lastCommentRef} >a</div>
+                                }
+                            }
+                        })}
+                    </>
+                }
+                {
+                    choice === "reply" &&
+                    <>
+                        {replies.map((reply, i) => {
 
-                        :
-                        choice === "comment" ?
-                            <>
-                                {userComments.map((commentInfo, i) => {
-                                    if (viewAnonymous || !commentInfo.is_anonymous) {
-                                        if (userComments.length === i + 1) {
-                                            return <div ref={lastCommentRef} className="mb-5" key={commentInfo.id_comment} ><UserCommentCard commentInfo={commentInfo} /></div>
-                                        } else {
-                                            return <div key={commentInfo.id_comment}><UserCommentCard commentInfo={commentInfo} /></div>
-                                        }
-                                    } else {
-                                        if (userComments.length === i + 1) {
-                                            return <div key={commentInfo.id_comment} className="invisible" ref={lastCommentRef} >a</div>
-                                        }
-                                    }
-                                })}
-                            </>
-                            :
-                            choice === "reply" &&
-                            <>
-                                {replies.map((reply, i) => {
-
-                                    let view = reply.id_comment != null ? reply.comment_is_anonymous : reply.post_is_anonymous
-                                    if (viewAnonymous || !view) {
-                                        if (replies.length === i + 1) {
-                                            return <div ref={lastReplieRef} className="mb-5" key={i} ><ReplyCard reply={reply} /></div>
-                                        } else {
-                                            return <div key={i}><ReplyCard reply={reply} /></div>
-                                        }
-                                    } else {
-                                        if (replies.length === i + 1) {
-                                            return <div key={i} className="invisible" ref={lastReplieRef} >a</div>
-                                        }
-                                    }
-                                })}
-                            </>
+                            let view = reply.id_comment != null ? reply.comment_is_anonymous : reply.post_is_anonymous
+                            if (viewAnonymous || !view) {
+                                if (replies.length === i + 1) {
+                                    return <div ref={lastReplieRef} className="mb-5" key={i} ><ReplyCard reply={reply} /></div>
+                                } else {
+                                    return <div key={i}><ReplyCard reply={reply} /></div>
+                                }
+                            } else {
+                                if (replies.length === i + 1) {
+                                    return <div key={i} className="invisible" ref={lastReplieRef} >a</div>
+                                }
+                            }
+                        })}
+                    </>
                 }
             </LayoutDiv>
             {
-                loading && <Loading />
+                commentsLoading || repliesLoading || postsLoading && <Loading />
             }
 
         </GlobalDiv>

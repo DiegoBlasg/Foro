@@ -32,6 +32,7 @@ export const singlePostAdapter = (post) => {
         user_image: post.data.post.user_image,
         user_name: post.data.post.user_name,
         is_owner: post.data.post.is_owner,
+        is_saved: post.data.post.is_saved,
         tags: post.data.post.tags.map((tag) => {
             return {
                 id_tag: tag.id_tag,

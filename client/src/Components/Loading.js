@@ -6,7 +6,6 @@ const Loading = () => {
                     "#fff"
                     :
                     "#444"
-
             }>
                 <g fill="none" fillRule="evenodd">
                     <g transform="translate(1 1)" strokeWidth="2">

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react"
 import { singlePostAdapter } from "../../../Adapters/post.adapter"
 import { commentsAdapter } from "../../../Adapters/comments.adapter"
 import { getPostCommentsService, newCommentService } from "../../../Services/comments.service"
-import { deletePostService, getSinglePostService } from "../../../Services/post.service"
+import { deletePostService, getSinglePostService, savePostService, unsavePostService } from "../../../Services/post.service"
 import { elapsedTime } from "../../../Utilities/format-elapsedTime.utility"
 import { useNavigate } from "react-router-dom"
 
-const useData = (postId) => {
+const usePostData = (postId) => {
     const [comments, setComments] = useState([])
     const [post, setPost] = useState({})
     const [is_anonymous, setIs_anonymous] = useState(false)
@@ -16,7 +16,7 @@ const useData = (postId) => {
 
     const navigate = useNavigate();
 
-    const newComment = async () => {
+    const newPostComment = async () => {
         const commentData = {
             content: value,
             is_anonymous: is_anonymous,
@@ -42,6 +42,14 @@ const useData = (postId) => {
         setis_deleteModalOpen(false)
         navigate("/");
     }
+    const savePost = async () => {
+        await savePostService(postId)
+        getPostInfo()
+    }
+    const unsavePost = async () => {
+        await unsavePostService(postId)
+        getPostInfo()
+    }
 
     useEffect(() => {
         if (post) setTimeAgo(elapsedTime(post.created_at))
@@ -52,8 +60,8 @@ const useData = (postId) => {
         getPostInfo()
     }, [])
     return {
-        newComment, getPostComments, setis_deleteModalOpen, deletePost, setIs_anonymous, setis_deleteModalOpen, deletePost, setIs_anonymous,
-        comments, post, is_anonymous, timeAgo, is_deleteModalOpen, value, setValue
+        newPostComment, getPostComments, setis_deleteModalOpen, deletePost, setIs_anonymous, setis_deleteModalOpen, deletePost, setIs_anonymous,
+        comments, post, is_anonymous, timeAgo, is_deleteModalOpen, value, setValue, savePost, unsavePost
     }
 }
-export default useData
+export default usePostData

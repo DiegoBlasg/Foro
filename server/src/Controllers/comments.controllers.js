@@ -13,7 +13,7 @@ contractsCtrl.getPostComments = async (req, res) => {
         WHERE c.parent_comment_id IS NULL AND id_post = ?`;
         const rows = await pool.query(sql, parseInt(req.params.post_id));
         const response = rows.map((com) => {
-            const USER_EMAIL = req.session.passport.user.emails[0].value
+            const USER_EMAIL = req.session.passport.user ? req.session.passport.user.emails[0].value : null
             com.is_owner = com.email == USER_EMAIL ? true : false
             com.email = com.is_anonymous ? null : com.email
             return com
@@ -58,7 +58,7 @@ contractsCtrl.getReplyComments = async (req, res) => {
         WHERE parent_comment_id = ?`;
         const rows = await pool.query(sql, parseInt(req.params.comment_id));
         const response = rows.map((com) => {
-            const USER_EMAIL = req.session.passport.user.emails[0].value
+            const USER_EMAIL = req.session.passport.user ? req.session.passport.user.emails[0].value : null
             com.is_owner = com.email == USER_EMAIL ? true : false
             com.email = com.is_anonymous ? null : com.email
             return com
@@ -66,6 +66,7 @@ contractsCtrl.getReplyComments = async (req, res) => {
 
         res.status(200).json({ comments: response });
     } catch (error) {
+        console.log(error);
         res.status(400).send(error.message)
     }
 }

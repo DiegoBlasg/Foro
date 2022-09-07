@@ -93,6 +93,17 @@ CREATE TABLE `users` (
   `user_image` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `saved_posts`
+--
+
+CREATE TABLE `saved_posts` (
+  `id_post` int(11) NOT NULL  
+  `email` varchar(50) NOT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Índices para tablas volcadas
 --
@@ -140,6 +151,13 @@ ALTER TABLE `tags_posts`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`email`);
+
+--
+-- Indices de la tabla `saved_posts`
+--
+ALTER TABLE `saved_posts`
+  ADD KEY `id_post` (`id_post`,`email`),
+  ADD KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -200,6 +218,13 @@ ALTER TABLE `replies`
 ALTER TABLE `tags_posts`
   ADD CONSTRAINT `tags_posts_ibfk_1` FOREIGN KEY (`id_tag`) REFERENCES `tags` (`id_tag`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tags_posts_ibfk_2` FOREIGN KEY (`id_post`) REFERENCES `posts` (`id_post`) ON DELETE CASCADE ON UPDATE CASCADE;
+  
+--
+-- Filtros para la tabla `saved_posts`
+--
+ALTER TABLE `saved_posts`
+  ADD CONSTRAINT `saved_posts_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `saved_posts_ibfk_2` FOREIGN KEY (`id_post`) REFERENCES `posts` (`id_post`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
