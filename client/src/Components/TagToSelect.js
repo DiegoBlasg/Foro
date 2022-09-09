@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 const TagToSelect = ({ tag, tagsArray, setTagsArray }) => {
 
     return (

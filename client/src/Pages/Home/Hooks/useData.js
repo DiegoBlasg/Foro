@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { postsAdapter } from "../../../Adapters/post.adapter"
 import { tagsAdapter } from "../../../Adapters/tags.adapter"
 import { getPostsService } from "../../../Services/post.service"
-import { getTagsService } from "../../../Services/tags.service"
+import { deleteTagsService, getTagsService, newTagService } from "../../../Services/tags.service"
 
 const useData = () => {
 
@@ -15,6 +15,10 @@ const useData = () => {
 
     const [hasMore, setHasMore] = useState(false)
     const [loading, setLoading] = useState(false)
+
+    const [newTagFormOpen, setNewTagFormOpen] = useState(false)
+    const [deleteTagFormOpen, setDeleteTagFormOpen] = useState(false)
+    const [tagFilterToDelete, setTagFilterToDelete] = useState([])
 
     const observer = useRef()
     const lastElementRef = useCallback(node => {
@@ -48,6 +52,21 @@ const useData = () => {
         setHasMore(postsAdapter(res).length > 0)
         setLoading(false)
     }
+    const newTag = async () => {
+        const tagColor = document.getElementById("tagColor").value
+        const tagName = document.getElementById("tagName").value
+        if (tagColor && tagName) {
+            await newTagService({ color: tagColor, name: tagName })
+            setNewTagFormOpen(false)
+            getTags()
+        }
+    }
+    const deleteTags = async () => {
+        await deleteTagsService({ tag_ids: tagFilterToDelete })
+        setDeleteTagFormOpen(false)
+        setTagFilterToDelete([])
+        getTags()
+    }
 
     useEffect(() => {
         setLoading(true)
@@ -58,6 +77,9 @@ const useData = () => {
     useEffect(() => {
         getTags()
     }, [])
-    return { setSearch, setTagFilter, lastElementRef, tagFilter, loading, posts, tags }
+    return {
+        setSearch, setTagFilter, lastElementRef, setNewTagFormOpen, newTag, setDeleteTagFormOpen, setTagFilterToDelete, deleteTags,
+        tagFilterToDelete, deleteTagFormOpen, tagFilter, newTagFormOpen, loading, posts, tags
+    }
 }
 export default useData

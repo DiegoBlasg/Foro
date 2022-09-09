@@ -12,6 +12,7 @@ router.get("/login/success", async (req, res) => {
         const userEmail = req.user.emails[0].value
         const sql1 = 'SELECT * FROM users WHERE email = ?';
         const user = await pool.query(sql1, userEmail);
+        req.user.is_admin = user[0].is_admin
         if (user.length) {
             if (user[0].image != req.user.photos[0].value) {
                 const sql = "UPDATE users SET user_image = ? WHERE email = ?";

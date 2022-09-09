@@ -47,7 +47,7 @@ function App() {
       <BrowserRouter>
         <Menu user={user} theme={theme} setTheme={setTheme} />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home user={user} />} />
           <Route path="/profile" element={user ? <Profile user={user} theme={theme} setTheme={setTheme} /> : <Navigate to="/" />} />
           <Route path="/post/:id_post" element={<Post user={user} />} />
           <Route path="/saved" element={user ? <Saved user={user} /> : <Navigate to="/" />} />

@@ -11,8 +11,8 @@ const useProfileData = () => {
     const [numberOfUserPosts, setNumberOfUserPosts] = useState(0)
     const [numberOfUserComments, setNumberOfUserComments] = useState(0)
 
-    const [choice, setChoice] = useState("post")
-    const [viewAnonymous, setViewAnonymous] = useState(false)
+    const [choice, setChoice] = useState("")
+    const [viewAnonymous, setViewAnonymous] = useState(true)
 
     const [search, setSearch] = useState(null)
     const [tagFilter, setTagFilter] = useState([])
