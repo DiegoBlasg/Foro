@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  react-app:
+    container_name: react-app
+    build: ./client
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    logging:
+      driver: none
+  api-server:
+    container_name: api-server
+    build: ./server
+    ports:
+      - "4000:4000"
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+        - /var/run/docker.sock:/tmp/docker.sock:ro
+        - certs:/etc/nginx/certs:ro
+        - vhostd:/etc/nginx/vhost.d
+        - html:/usr/share/nginx/html
+    labels:
+        - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    environment:
+        - NGINX_PROXY_CONTAINER=nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - vhostd:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+  nginx:
+    build: ./nginx
+    expose:
+      - "80"
+    links:
+      - api-server
+      - react-app
+      - nginx-proxy
+      - letsencrypt
+    environment: 
+      - VIRTUAL_HOST=DOMAIN,www.DOMAIN
+      - LETSENCRYPT_HOST=DOMAIN,www.DOMAIN
+    restart: always
+volumes:
+  certs:
+  html:
+  vhostd:
+
