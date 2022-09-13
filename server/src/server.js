@@ -39,11 +39,11 @@ app.use(express.urlencoded({ extended: false }));
  * Routes
  */
 
-app.use('/posts', require('./Routes/posts'));
-app.use('/comments', require('./Routes/comments'));
-app.use('/tags', require('./Routes/tags'));
-app.use('/replies', require('./Routes/replies'))
-app.use('/auth', require('./Routes/auth'))
+app.use('/api/posts', require('./Routes/posts'));
+app.use('/api/comments', require('./Routes/comments'));
+app.use('/api/tags', require('./Routes/tags'));
+app.use('/api/replies', require('./Routes/replies'))
+app.use('/api/auth', require('./Routes/auth'))
 
 /**Start listening */
 

@@ -18,11 +18,11 @@ const Menu = ({ user, setTheme, theme }) => {
     window.addEventListener('resize', isAPhone)
 
     const google = () => {
-        window.open(`${process.env.API_PATH || 'http://localhost:4000'}/auth/google`, "_self")
+        window.open(`/api/auth/google`, "_self")
     }
 
     const logout = () => {
-        window.open(`${process.env.API_PATH || 'http://localhost:4000'}/auth/logout`, "_self")
+        window.open(`/api/auth/logout`, "_self")
     }
 
     useEffect(() => {
