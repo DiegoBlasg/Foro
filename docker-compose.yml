@@ -18,7 +18,7 @@ services:
       - "4000:4000"
     environment:
       - PORT=4000
-      - CLIENT_PATH=${CLIENT_PATHCLIENT_PATH}
+      - CLIENT_PATH=${CLIENT_PATH}
       - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
@@ -27,7 +27,7 @@ services:
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - SECRET_COOCKIE_KEY=${SECRET_COOCKIE_KEY}
     depends_on: 
-      - mariadbmariadb
+      - mariadb
   mariadb:
     image: mariadb:10.7
     ports:

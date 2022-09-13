@@ -1,8 +1,5 @@
 const passport = require('passport')
-const dotenv = require('dotenv');
 const pool = require('./database')
-
-dotenv.config({ path: '.env.local' });
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 passport.use(new GoogleStrategy({

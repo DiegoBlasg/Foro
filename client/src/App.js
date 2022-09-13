@@ -12,7 +12,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [theme, setTheme] = useState(null);
   const getUser = () => {
-    fetch("${process.env.API_PATH} || 'http://localhost:4000'/auth/login/success", {
+    fetch(`${process.env.REACT_APP_API_PATH || 'http://localhost:4000'}/auth/login/success`, {
       method: "GET",
       credentials: "include",
       headers: {

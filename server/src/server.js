@@ -3,10 +3,8 @@ const cookieSession = require('cookie-session');
 const cors = require('cors');
 const passportSetup = require('./passport')
 const passport = require('passport');
-const dotenv = require('dotenv');
 var bodyParser = require("body-parser");
 
-dotenv.config({ path: '.env.local' });
 
 const PORT = process.env.PORT || '4000';
 
