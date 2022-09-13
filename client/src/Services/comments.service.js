@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = `${process.env.REACT_APP_API_PATH || 'http://localhost:4000'}/comments`;
+const apiUrl = `/api/comments`;
 
 export const getPostCommentsService = async (id_post) => {
     return await axios.get(apiUrl + `/post/${id_post}`, { withCredentials: true })

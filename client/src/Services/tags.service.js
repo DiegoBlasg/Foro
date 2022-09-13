@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = `${process.env.REACT_APP_API_PATH || 'http://localhost:4000'}/tags`;
+const apiUrl = `/api/tags`;
 
 export const getTagsService = async () => {
     return await axios.get(apiUrl)

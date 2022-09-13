@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = `${process.env.REACT_APP_API_PATH || 'http://localhost:4000'}/replies`;
+const apiUrl = `/api/replies`;
 
 export const getRepliesService = async (page, search, tags) => {
     let string = ""
