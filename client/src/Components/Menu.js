@@ -18,11 +18,11 @@ const Menu = ({ user, setTheme, theme }) => {
     window.addEventListener('resize', isAPhone)
 
     const google = () => {
-        window.open(`${process.env.REACT_APP_API_URL}/api/auth/google`, "_self")
+        window.open(`${process.env.REACT_APP_API_URL || ''}/api/auth/google`, "_self")
     }
 
     const logout = () => {
-        window.open(`${process.env.REACT_APP_API_URL}/api/auth/logout`, "_self")
+        window.open(`${process.env.REACT_APP_API_URL || ''}/api/auth/logout`, "_self")
     }
 
     useEffect(() => {

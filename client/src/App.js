@@ -11,9 +11,8 @@ import Saved from './Pages/Saved/Saved';
 function App() {
   const [user, setUser] = useState(null);
   const [theme, setTheme] = useState(null);
-  console.log(`${process.env.REACT_APP_API_URL}/api/auth/login/success`);
   const getUser = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/auth/login/success`, {
+    fetch(`${process.env.REACT_APP_API_URL || ''}/api/auth/login/success`, {
       method: "GET",
       credentials: "include",
       headers: {
