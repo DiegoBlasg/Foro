@@ -4,9 +4,10 @@ const cors = require('cors');
 const passportSetup = require('./passport')
 const passport = require('passport');
 var bodyParser = require("body-parser");
+if (process.env.NODE_ENV != "production") require('dotenv').config({ path: '.env.local' });
 
 
-const PORT = process.env.PORT || '4000';
+const PORT = process.env.PORT;
 
 const app = express();
 
@@ -25,12 +26,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json({ limit: '5000kb' }));
 
+
 app.use(cors({
-    origin: process.env.CLIENT_PATH || "http://localhost:3000",
+    origin: process.env.CLIENT_PATH,
     methods: "GET,POST,PUT,DELETE",
     credentials: true
 }));
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

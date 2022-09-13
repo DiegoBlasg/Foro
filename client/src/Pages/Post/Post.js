@@ -17,8 +17,8 @@ const Post = ({ user }) => {
                     <div className='absolute w-full h-full flex flex-col justify-center items-center'>
                         <div className="rounded-md p-5 shadow-md bg-zinc-100 dark:bg-zinc-900 w-1/2">
                             <div className="flex justify-center flex-col mb-3">
-                                <h1 className="text-white text-2xl font-semibold">Are you sure you want to delete this post?</h1>
-                                <h1 className="text-white text-sm mt-2">The post will be deleted forever</h1>
+                                <h1 className="dark:text-white text-zinc-800 text-2xl font-semibold">Are you sure you want to delete this post?</h1>
+                                <h1 className="dark:text-white text-zinc-800 text-sm mt-2">The post will be deleted forever</h1>
 
                             </div>
                             <div className="flex justify-end space-x-4">

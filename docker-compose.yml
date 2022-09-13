@@ -24,6 +24,8 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - SECRET_COOCKIE_KEY=${SECRET_COOCKIE_KEY}
+      - CALLBACKURL=${CLIENT_PATH}
+      - NODE_ENV=production
     depends_on: 
       - mariadb
   mariadb:
