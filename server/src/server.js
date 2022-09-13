@@ -28,7 +28,7 @@ app.use(passport.session());
 app.use(bodyParser.json({ limit: '5000kb' }));
 
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_PATH || "http://localhost:3000",
     methods: "GET,POST,PUT,DELETE",
     credentials: true
 }));

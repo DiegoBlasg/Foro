@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = 'http://localhost:4000/posts';
+const apiUrl = `${process.env.API_PATH || 'http://localhost:4000'}/posts`;
 
 export const newPostService = async (data) => {
     return await axios.post(apiUrl, data, { withCredentials: true })

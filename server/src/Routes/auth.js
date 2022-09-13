@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const passport = require('passport')
 const pool = require('../database')
-const CLIENT_URL = "http://localhost:3000"
+const CLIENT_URL = process.env.CLIENT_PATH || "http://localhost:3000"
 
 router.get("/login/failed", (req, res) => {
     res.status(401).json({ success: false, message: "failure" })

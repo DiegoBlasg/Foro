@@ -100,8 +100,8 @@ CREATE TABLE `users` (
 --
 
 CREATE TABLE `saved_posts` (
-  `id_post` int(11) NOT NULL  
-  `email` varchar(50) NOT NULL,
+  `id_post` int(11) NOT NULL,
+  `email` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --

@@ -7,6 +7,8 @@ services:
     stdin_open: true
     ports:
       - "3000:3000"
+    environment:
+      - API_PATH=${API_PATH}
     logging:
       driver: none
   api-server:
@@ -14,6 +16,28 @@ services:
     build: ./server
     ports:
       - "4000:4000"
+    environment:
+      - PORT=4000
+      - CLIENT_PATH=${CLIENT_PATHCLIENT_PATH}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - SECRET_COOCKIE_KEY=${SECRET_COOCKIE_KEY}
+    depends_on: 
+      - mariadbmariadb
+  mariadb:
+    image: mariadb:10.7
+    ports:
+      - 3306:3306
+    volumes:
+      - ~/apps/mariadb:/var/lib/mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_PASS}
+      - MARIADB_PASSWORD=${DB_PASS}
+      - MARIADB_USER=user
   nginx-proxy:
     image: jwilder/nginx-proxy
     restart: always
@@ -47,8 +71,8 @@ services:
       - nginx-proxy
       - letsencrypt
     environment: 
-      - VIRTUAL_HOST=DOMAIN,www.DOMAIN
-      - LETSENCRYPT_HOST=DOMAIN,www.DOMAIN
+      - VIRTUAL_HOST=${DOMAIN},www.${DOMAIN}
+      - LETSENCRYPT_HOST=${DOMAIN},www.${DOMAIN}
     restart: always
 volumes:
   certs:
